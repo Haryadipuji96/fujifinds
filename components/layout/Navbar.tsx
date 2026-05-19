@@ -1,27 +1,22 @@
-// components/layout/Navbar.tsx
 'use client'
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ShoppingBag, Menu, X, Sun, Moon, ChevronRight, Search, User } from 'lucide-react'
+import { ShoppingBag, Menu, X, Sun, Moon, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useTheme } from '@/components/theme-provider'
 
-export function Navbar() {
+export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const [searchOpen, setSearchOpen] = useState(false)
   const pathname = usePathname()
   const { theme, setTheme } = useTheme()
 
   useEffect(() => {
     setMounted(true)
-    
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20)
-    }
+    const handleScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
@@ -30,175 +25,126 @@ export function Navbar() {
     { name: 'Beranda', href: '/' },
     { name: 'Shopee', href: '/platform/shopee' },
     { name: 'TikTok', href: '/platform/tiktok' },
-    { name: 'Semua Produk', href: '/products' },
+    { name: 'Semua Produk', href: '/product' },
+    { name: 'Tentang Kami', href: '/about' },
   ]
-
-  // Don't render theme toggle until mounted on client
-  const renderThemeToggle = () => {
-    if (!mounted) {
-      return (
-        <Button variant="ghost" size="icon" className="relative overflow-hidden group">
-          <div className="h-5 w-5" />
-        </Button>
-      )
-    }
-    return (
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-        className="relative overflow-hidden group transition-all duration-300 hover:scale-110"
-      >
-        <div className="relative z-10 transition-transform duration-500 group-hover:rotate-12">
-          {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-        </div>
-        <span className="absolute inset-0 bg-primary/20 rounded-full scale-0 group-hover:scale-100 transition-transform duration-300" />
-      </Button>
-    )
-  }
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled 
-          ? 'bg-background/80 backdrop-blur-xl border-b shadow-lg' 
-          : 'bg-transparent'
-      }`}>
+      <nav 
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+          scrolled 
+            ? 'bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 shadow-lg' 
+            : 'bg-white/50 dark:bg-slate-950/50 backdrop-blur-md'
+        }`}
+      >
         <div className="container mx-auto px-4">
-          <div className="flex h-16 items-center justify-between">
+          <div className="flex h-16 items-center justify-between gap-4">
             {/* Logo */}
-            <Link href="/" className="relative group">
-              <div className="flex items-center space-x-2">
-                <div className="relative">
-                  <ShoppingBag className="h-7 w-7 text-primary transition-all duration-500 group-hover:scale-110 group-hover:rotate-12" />
-                  <div className="absolute inset-0 bg-primary/30 blur-xl rounded-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <Link href="/" className="flex items-center gap-2 group shrink-0">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="relative p-1.5 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 shadow-lg">
+                  <ShoppingBag className="h-5 w-5 text-white" />
                 </div>
-                <span className="font-bold text-xl bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-                  Affiliate Store
+              </div>
+              <div className="hidden sm:block">
+                <span className="font-bold text-base md:text-lg bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                  Fujifinds Store
                 </span>
+                <span className="block text-[10px] text-slate-500 dark:text-slate-400 -mt-1">Premium Affiliate</span>
               </div>
             </Link>
 
-            {/* Search Bar - Desktop */}
-            <div className="hidden md:flex items-center flex-1 max-w-md mx-8">
-              <div className="relative w-full group">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                <input
-                  type="text"
-                  placeholder="Cari produk..."
-                  className="w-full pl-10 pr-4 py-2 rounded-full bg-muted/50 border border-border focus:border-primary focus:outline-none transition-all duration-300 focus:ring-2 focus:ring-primary/20"
-                />
-              </div>
-            </div>
-
             {/* Desktop Navigation */}
-            <div className="hidden md:flex md:items-center md:space-x-1">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg overflow-hidden group ${
-                    pathname === item.href 
-                      ? 'text-primary' 
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  <span className="relative z-10">{item.name}</span>
-                  <span className={`absolute inset-0 bg-primary/10 rounded-lg transition-all duration-300 transform ${
-                    pathname === item.href ? 'scale-100 opacity-100' : 'scale-0 opacity-0 group-hover:scale-100 group-hover:opacity-100'
-                  }`} />
-                </Link>
-              ))}
+            <div className="hidden md:flex items-center gap-1">
+              {navigation.map((item) => {
+                const isActive = pathname === item.href
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-full ${
+                      isActive 
+                        ? 'text-purple-600 dark:text-purple-400 bg-purple-100 dark:bg-purple-950/50 shadow-sm' 
+                        : 'text-slate-700 dark:text-slate-300 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-950/30'
+                    }`}
+                  >
+                    {item.name}
+                    {isActive && (
+                      <span className="absolute -bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-purple-500 rounded-full" />
+                    )}
+                  </Link>
+                )
+              })}
             </div>
 
-            {/* Right Section */}
-            <div className="flex items-center space-x-2">
-              {/* Search Toggle - Mobile */}
+            {/* Right Actions */}
+            <div className="flex items-center gap-2">
+              {mounted && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  className="rounded-full transition-all duration-300 hover:scale-110 hover:bg-purple-100 dark:hover:bg-purple-950/50"
+                >
+                  {theme === 'dark' ? (
+                    <Sun className="h-5 w-5 text-yellow-500" />
+                  ) : (
+                    <Moon className="h-5 w-5 text-slate-700" />
+                  )}
+                </Button>
+              )}
+
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => setSearchOpen(!searchOpen)}
-                className="md:hidden relative overflow-hidden group transition-all duration-300 hover:scale-110"
+                className="rounded-full transition-all duration-300 hover:scale-110 hover:bg-purple-100 dark:hover:bg-purple-950/50"
               >
-                <Search className="h-5 w-5" />
+                <User className="h-5 w-5 text-slate-700 dark:text-slate-300" />
               </Button>
 
-              {/* Theme Toggle */}
-              {renderThemeToggle()}
-
-              {/* User Button */}
               <Button
                 variant="ghost"
                 size="icon"
-                className="relative overflow-hidden group transition-all duration-300 hover:scale-110"
-              >
-                <User className="h-5 w-5" />
-              </Button>
-
-              {/* Mobile menu button */}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="md:hidden relative overflow-hidden group"
+                className="md:hidden rounded-full transition-all duration-300"
                 onClick={() => setIsOpen(!isOpen)}
               >
-                <div className="relative z-10 transition-transform duration-300">
-                  {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-                </div>
+                {isOpen ? (
+                  <X className="h-5 w-5 text-slate-700 dark:text-slate-300" /> 
+                ) : (
+                  <Menu className="h-5 w-5 text-slate-700 dark:text-slate-300" />
+                )}
               </Button>
             </div>
           </div>
         </div>
       </nav>
 
-      {/* Spacer for fixed navbar */}
-      <div className="h-16" />
-
-      {/* Mobile Search Bar */}
-      <div className={`fixed top-16 left-0 right-0 z-40 bg-background/95 backdrop-blur-xl border-b transition-all duration-300 md:hidden ${
-        searchOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none'
-      }`}>
-        <div className="container mx-auto px-4 py-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <input
-              type="text"
-              placeholder="Cari produk..."
-              className="w-full pl-10 pr-4 py-2 rounded-lg bg-muted/50 border border-border focus:border-primary focus:outline-none transition-all"
-              autoFocus={searchOpen}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Navigation Menu */}
-      <div className={`fixed inset-0 z-40 bg-background/95 backdrop-blur-xl transition-all duration-500 md:hidden ${
-        isOpen 
-          ? 'opacity-100 visible translate-x-0' 
-          : 'opacity-0 invisible translate-x-full'
-      }`}>
+      {/* Mobile Menu */}
+      <div 
+        className={`fixed inset-0 z-40 bg-white dark:bg-slate-950 backdrop-blur-xl transition-all duration-500 md:hidden ${
+          isOpen ? 'opacity-100 visible translate-x-0' : 'opacity-0 invisible translate-x-full'
+        }`}
+      >
         <div className="flex flex-col h-full pt-20 pb-8">
-          <div className="flex-1 flex flex-col items-center justify-center space-y-6">
-            {navigation.map((item, index) => (
+          <div className="flex-1 flex flex-col items-center justify-center gap-6">
+            {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
                 onClick={() => setIsOpen(false)}
-                className={`group relative text-2xl font-medium transition-all duration-300 transform hover:scale-110 ${
+                className={`text-xl font-medium transition-all duration-300 hover:scale-110 ${
                   pathname === item.href 
-                    ? 'text-primary' 
-                    : 'text-muted-foreground hover:text-foreground'
+                    ? 'text-purple-600 dark:text-purple-400' 
+                    : 'text-slate-700 dark:text-slate-300'
                 }`}
-                style={{ transitionDelay: `${index * 50}ms` }}
               >
-                <span className="relative z-10">{item.name}</span>
-                <ChevronRight className="absolute -right-8 top-1/2 -translate-y-1/2 h-5 w-5 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-0 translate-x-[-10px]" />
+                {item.name}
               </Link>
             ))}
           </div>
-          
-          {/* Mobile Footer */}
-          <div className="text-center text-sm text-muted-foreground">
+          <div className="text-center text-xs text-slate-500 dark:text-slate-400">
             <p>© 2024 Affiliate Store</p>
           </div>
         </div>

@@ -1,11 +1,9 @@
-// components/product/ProductCard.tsx
 'use client'
 
 import Image from 'next/image'
 import Link from 'next/link'
 import { ShoppingCart, Eye, Star, TrendingUp, Heart, Share2, ImageOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { formatPrice } from '@/lib/utils/utils'
 import type { Product } from '@/types'
@@ -30,11 +28,10 @@ export function ProductCard({ product, onBuyClick }: ProductCardProps) {
   const hasMultipleImages = product.images && product.images.length > 1
   const imageUrl = product.images?.[currentImageIndex]
 
-  // Reset error ketika product berubah ATAU image index berubah
   useEffect(() => {
     setImgError(false)
-    setCurrentImageIndex(0) // Reset ke index pertama ketika product berganti
-  }, [product.id]) // Tambahkan dependency product.id
+    setCurrentImageIndex(0)
+  }, [product.id])
 
   useEffect(() => {
     setImgError(false)
@@ -58,73 +55,62 @@ export function ProductCard({ product, onBuyClick }: ProductCardProps) {
     }
   }
 
-  const handleImageError = () => {
-    console.log('Image failed to load:', imageUrl) // Debug log
-    setImgError(true)
+  const handleProductClick = () => {
+    window.location.href = `/products/${product.slug}`
   }
 
-  const handleImageLoad = () => {
-    console.log('Image loaded successfully:', imageUrl) // Debug log
-    setImgError(false)
-  }
-
-  // Jika tidak ada imageUrl sama sekali
   if (!imageUrl) {
     return (
-      <Card className="group relative overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 cursor-pointer">
-        <div className="relative overflow-hidden aspect-square bg-gradient-to-br from-muted to-muted/50 flex items-center justify-center">
-          <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
-            <ImageOff className="h-12 w-12" />
-            <span className="text-xs">Gambar tidak tersedia</span>
+      <div className="group relative bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-lg transition-all duration-300">
+        <div className="relative overflow-hidden aspect-square bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-1 text-slate-400">
+            <ImageOff className="h-8 w-8" />
+            <span className="text-[10px]">No image</span>
           </div>
         </div>
-        <CardContent className="p-4 space-y-2">
-          <h3 className="font-semibold text-base line-clamp-2">{product.name}</h3>
-          <div className="flex items-baseline gap-2 flex-wrap">
-            <span className="text-xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-              {formatPrice(product.price)}
-            </span>
+        <div className="p-2.5">
+          <Link href={`/products/${product.slug}`}>
+            <h3 className="text-xs font-medium line-clamp-2 text-slate-700 dark:text-slate-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors min-h-[2.5rem]">
+              {product.name}
+            </h3>
+          </Link>
+          <div className="mt-1">
+            <span className="text-sm font-bold text-purple-600 dark:text-purple-400">{formatPrice(product.price)}</span>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     )
   }
 
   return (
-    <Card 
-      className="group relative overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 cursor-pointer"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      {/* Gradient overlay on hover */}
-      <div className={`absolute inset-0 bg-gradient-to-t from-primary/20 via-transparent to-transparent opacity-0 transition-opacity duration-500 z-10 pointer-events-none ${isHovered ? 'opacity-100' : ''}`} />
-      
+    <div 
+  className="group relative bg-white dark:bg-white rounded-xl overflow-hidden border border-slate-200 dark:border-slate-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer product-card"
+  onMouseEnter={() => setIsHovered(true)}
+  onMouseLeave={() => setIsHovered(false)}
+  onClick={handleProductClick}
+>
       {/* Image Container */}
-      <div className="relative overflow-hidden aspect-square bg-gradient-to-br from-muted to-muted/50">
-        {/* Selalu coba render Image, jangan pake conditional yang terlalu strict */}
+      <div className="block relative aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800">
         <Image
           src={imageUrl}
           alt={product.name}
           fill
-          className={`object-cover transition-all duration-700 ${isHovered ? 'scale-110' : 'scale-100'}`}
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          onError={handleImageError}
-          onLoad={handleImageLoad}
-          priority={currentImageIndex === 0}
+          className={`object-cover transition-all duration-500 ${isHovered ? 'scale-105' : 'scale-100'}`}
+          sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 20vw, 16vw"
+          onError={() => setImgError(true)}
+          onLoad={() => setImgError(false)}
         />
         
-        {/* Tampilkan overlay error jika gambar gagal load */}
         {imgError && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-muted/90 backdrop-blur-sm">
-            <ImageOff className="h-12 w-12 text-muted-foreground" />
-            <span className="text-xs text-muted-foreground">Gambar tidak tersedia</span>
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-100 dark:bg-slate-800">
+            <ImageOff className="h-8 w-8 text-slate-400" />
           </div>
         )}
         
         {/* Image indicator dots */}
         {hasMultipleImages && !imgError && (
-          <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex gap-1 z-20">
-            {product.images.map((_, idx) => (
+          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-1 z-10">
+            {product.images.slice(0, 5).map((_, idx) => (
               <button
                 key={idx}
                 onClick={(e) => {
@@ -132,141 +118,126 @@ export function ProductCard({ product, onBuyClick }: ProductCardProps) {
                   e.stopPropagation()
                   setCurrentImageIndex(idx)
                 }}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
+                className={`h-1 rounded-full transition-all duration-300 ${
                   currentImageIndex === idx 
-                    ? 'w-4 bg-white' 
-                    : 'w-1.5 bg-white/50 hover:bg-white/80'
+                    ? 'w-3 bg-white' 
+                    : 'w-1 bg-white/60 hover:bg-white/80'
                 }`}
               />
             ))}
           </div>
         )}
         
-        {/* Animated shine effect */}
-        <div className={`absolute inset-0 -translate-x-full group-hover:translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-1000 pointer-events-none ${isHovered ? 'translate-x-full' : ''}`} />
-        
         {/* Discount Badge */}
         {discountPercentage > 0 && (
-          <Badge className="absolute top-3 right-3 bg-gradient-to-r from-red-500 to-red-600 animate-pulse z-20 shadow-lg text-white border-0">
+          <Badge className="absolute top-2 right-2 bg-gradient-to-r from-red-500 to-red-600 text-white border-0 text-[10px] px-1.5 py-0.5 rounded-full">
             -{discountPercentage}%
           </Badge>
         )}
         
         {/* Platform Badge */}
         <Badge 
-          className={`absolute top-3 left-3 z-20 shadow-lg backdrop-blur-sm border-0 ${
+          className={`absolute top-2 left-2 text-[10px] px-1.5 py-0.5 rounded-full border-0 ${
             product.platform === 'Shopee' 
-              ? 'bg-gradient-to-r from-orange-500 to-orange-600' 
-              : 'bg-gradient-to-r from-black to-gray-800'
+              ? 'bg-orange-500' 
+              : 'bg-slate-700'
           }`}
         >
-          {product.platform === 'Shopee' ? '🛍️' : '🎵'} {product.platform}
+          {product.platform === 'Shopee' ? '🛍️ Shopee' : '🎵 TikTok'}
         </Badge>
 
-        {/* Trending Badge */}
-        {product.is_trending && (
-          <div className="absolute bottom-3 left-3 z-20 flex items-center gap-1 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white px-2 py-1 rounded-full text-xs font-semibold shadow-lg">
-            <TrendingUp className="h-3 w-3" />
-            Trending
-          </div>
-        )}
-
-        {/* Quick Action Buttons */}
-        <div className={`absolute inset-0 flex items-center justify-center gap-3 bg-black/50 backdrop-blur-sm transition-all duration-500 z-20 ${
+        {/* Quick Action Overlay */}
+        <div className={`absolute inset-0 flex items-center justify-center gap-1.5 bg-black/40 transition-all duration-300 ${
           isHovered ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}>
-          <Link href={`/products/${product.slug}`}>
-            <Button 
-              size="sm" 
-              variant="secondary" 
-              className="gap-2 transform transition-all duration-300 hover:scale-110 hover:shadow-xl"
-            >
-              <Eye className="h-4 w-4" />
-              Detail
-            </Button>
-          </Link>
+          <Button 
+            size="sm" 
+            variant="secondary" 
+            className="h-7 w-7 p-0 rounded-full bg-white/90 hover:bg-white"
+            onClick={(e) => {
+              e.stopPropagation()
+              window.location.href = `/products/${product.slug}`
+            }}
+          >
+            <Eye className="h-3.5 w-3.5 text-slate-700" />
+          </Button>
           <Button 
             size="sm"
-            onClick={() => onBuyClick?.(product.id)}
-            className="gap-2 bg-gradient-to-r from-primary to-primary/80 transform transition-all duration-300 hover:scale-110 hover:shadow-xl"
+            onClick={(e) => {
+              e.stopPropagation()
+              onBuyClick?.(product.id)
+            }}
+            className="h-7 w-7 p-0 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
           >
-            <ShoppingCart className="h-4 w-4" />
-            Beli
+            <ShoppingCart className="h-3.5 w-3.5 text-white" />
           </Button>
+          <button
+            onClick={handleWishlist}
+            className="h-7 w-7 rounded-full bg-white/90 hover:bg-white flex items-center justify-center transition-colors"
+          >
+            <Heart className={`h-3.5 w-3.5 transition-all ${isWishlisted ? 'fill-red-500 text-red-500' : 'text-slate-600'}`} />
+          </button>
         </div>
       </div>
       
-      {/* Content - same as before */}
-      <CardContent className="p-4 space-y-2">
-        <Link href={`/products/${product.slug}`}>
-          <h3 className="font-semibold text-base line-clamp-2 hover:text-primary transition-colors duration-300">
-            {product.name}
-          </h3>
-        </Link>
+      {/* Content */}
+      <div className="p-2.5">
+        <h3 className="text-xs font-medium line-clamp-2 text-slate-700 dark:text-slate-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors min-h-[2.5rem]">
+          {product.name}
+        </h3>
         
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1">
-            <div className="flex items-center">
-              {[...Array(5)].map((_, i) => (
-                <Star 
-                  key={i} 
-                  className={`h-3 w-3 ${i < Math.floor(product.rating || 0) ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground'}`}
-                />
-              ))}
-            </div>
-            <span className="text-xs text-muted-foreground">({product.rating || 0})</span>
+        {/* Rating */}
+        <div className="flex items-center gap-1 mt-1">
+          <div className="flex items-center">
+            {[...Array(5)].map((_, i) => (
+              <Star 
+                key={i} 
+                className={`h-2.5 w-2.5 ${i < 4 ? 'fill-yellow-400 text-yellow-400' : 'text-slate-300 dark:text-slate-600'}`}
+              />
+            ))}
           </div>
-          
-          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <button
-              onClick={handleWishlist}
-              className="p-1 rounded-full hover:bg-red-500/10 transition-colors"
-            >
-              <Heart className={`h-3.5 w-3.5 transition-all ${isWishlisted ? 'fill-red-500 text-red-500 scale-110' : 'text-muted-foreground'}`} />
-            </button>
-            <button
-              onClick={handleShare}
-              className="p-1 rounded-full hover:bg-primary/10 transition-colors"
-            >
-              <Share2 className="h-3.5 w-3.5 text-muted-foreground hover:text-primary transition-colors" />
-            </button>
-          </div>
+          <span className="text-[10px] text-slate-400">(4.9)</span>
         </div>
         
-        <div className="flex items-baseline gap-2 flex-wrap">
+        {/* Price */}
+        <div className="flex items-baseline gap-1 mt-1 flex-wrap">
           {product.discount_price ? (
             <>
-              <span className="text-xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
+              <span className="text-sm font-bold text-purple-600 dark:text-purple-400">
                 {formatPrice(product.discount_price)}
               </span>
-              <span className="text-xs text-muted-foreground line-through">
+              <span className="text-[10px] text-slate-400 line-through">
                 {formatPrice(product.price)}
               </span>
             </>
           ) : (
-            <span className="text-xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
+            <span className="text-sm font-bold text-purple-600 dark:text-purple-400">
               {formatPrice(product.price)}
             </span>
           )}
         </div>
 
-        <div className="flex gap-2 mt-3 md:hidden">
-          <Link href={`/products/${product.slug}`} className="flex-1">
-            <Button variant="outline" size="sm" className="w-full gap-1">
-              <Eye className="h-3 w-3" />
-              Detail
-            </Button>
-          </Link>
-          <Button 
-            size="sm"
-            className="flex-1 gap-1 bg-gradient-to-r from-primary to-primary/80"
-            onClick={() => onBuyClick?.(product.id)}
-          >
-            <ShoppingCart className="h-3 w-3" />
-            Beli
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+        {/* Trending Badge */}
+        {product.is_trending && (
+          <div className="flex items-center gap-0.5 mt-1">
+            <TrendingUp className="h-2.5 w-2.5 text-orange-500" />
+            <span className="text-[9px] text-orange-500">Trending</span>
+          </div>
+        )}
+
+        {/* Mobile Buy Button */}
+        <Button 
+          size="sm"
+          className="w-full mt-2 gap-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-xs py-1.5 h-auto rounded-lg md:hidden"
+          onClick={(e) => {
+            e.stopPropagation()
+            onBuyClick?.(product.id)
+          }}
+        >
+          <ShoppingCart className="h-3 w-3" />
+          Beli Sekarang
+        </Button>
+      </div>
+    </div>
   )
 }

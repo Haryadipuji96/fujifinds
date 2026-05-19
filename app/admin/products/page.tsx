@@ -1,10 +1,9 @@
-// app/admin/products/page.tsx
 'use client'
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Plus, Edit, Trash2, Eye, Package, Filter, TrendingUp, Sparkles, Search, RefreshCw } from 'lucide-react'
+import { Plus, Edit, Trash2, Eye, Package, Filter, TrendingUp, Sparkles, Search, RefreshCw, ShoppingBag, Zap, Grid3x3, List } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -128,29 +127,29 @@ export default function AdminProductsPage() {
   const tiktokProducts = products.filter(p => p.platform === 'TikTok').length
 
   const handleAddProduct = () => {
-    console.log('Navigating to add product...')
     router.push('/admin/products/add')
   }
 
   return (
-    <div className="space-y-6 animate-fade-in-up">
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-gradient-to-r from-primary to-primary/60 rounded-xl">
+            <div className="p-2.5 rounded-2xl bg-gradient-to-br from-[#00D4FF] to-[#FF006E] shadow-lg shadow-[#00D4FF]/20">
               <Package className="h-6 w-6 text-white" />
             </div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-              Manajemen Produk
-            </h1>
+            <div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-[#00D4FF] via-[#FF006E] to-[#00D4FF] bg-clip-text text-transparent animate-gradient">
+                Manajemen Produk
+              </h1>
+              <p className="text-slate-400 text-sm mt-0.5">Kelola semua produk affiliate Anda</p>
+            </div>
           </div>
-          <p className="text-muted-foreground mt-1">Kelola semua produk affiliate Anda</p>
         </div>
-        {/* Tombol Tambah Produk - Sederhana tanpa efek absolute yang mengganggu */}
         <Button 
           onClick={handleAddProduct}
-          className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary shadow-lg cursor-pointer relative z-10"
+          className="bg-gradient-to-r from-[#00D4FF] to-[#FF006E] hover:from-[#00D4FF]/90 hover:to-[#FF006E]/90 shadow-lg shadow-[#00D4FF]/25 rounded-xl"
         >
           <Plus className="mr-2 h-4 w-4" />
           Tambah Produk
@@ -159,39 +158,39 @@ export default function AdminProductsPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 p-4 hover:scale-105 transition-all duration-300 cursor-pointer">
-          <div className="absolute top-0 right-0 w-16 h-16 bg-primary/20 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500" />
+        <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700 p-4 hover:border-[#00D4FF]/50 transition-all duration-300">
+          <div className="absolute top-0 right-0 w-16 h-16 bg-[#00D4FF]/5 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500" />
           <div className="relative z-10">
-            <p className="text-xs text-muted-foreground">Total Produk</p>
-            <p className="text-2xl font-bold text-primary">{totalProducts}</p>
+            <p className="text-xs text-slate-400">Total Produk</p>
+            <p className="text-2xl font-bold text-[#00D4FF]">{totalProducts}</p>
           </div>
         </div>
-        <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-green-500/10 to-green-500/5 border border-green-500/20 p-4 hover:scale-105 transition-all duration-300 cursor-pointer">
+        <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700 p-4 hover:border-emerald-500/50 transition-all duration-300">
           <div className="relative z-10">
-            <p className="text-xs text-muted-foreground">Produk Aktif</p>
-            <p className="text-2xl font-bold text-green-500">{activeProducts}</p>
+            <p className="text-xs text-slate-400">Produk Aktif</p>
+            <p className="text-2xl font-bold text-emerald-400">{activeProducts}</p>
           </div>
         </div>
-        <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-orange-500/10 to-orange-500/5 border border-orange-500/20 p-4 hover:scale-105 transition-all duration-300 cursor-pointer">
+        <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700 p-4 hover:border-orange-500/50 transition-all duration-300">
           <div className="relative z-10">
-            <p className="text-xs text-muted-foreground">Shopee</p>
-            <p className="text-2xl font-bold text-orange-500">{shopeeProducts}</p>
+            <p className="text-xs text-slate-400">Shopee</p>
+            <p className="text-2xl font-bold text-orange-400">{shopeeProducts}</p>
           </div>
         </div>
-        <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-black/10 to-black/5 dark:from-white/10 dark:to-white/5 border border-black/20 dark:border-white/20 p-4 hover:scale-105 transition-all duration-300 cursor-pointer">
+        <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700 p-4 hover:border-purple-500/50 transition-all duration-300">
           <div className="relative z-10">
-            <p className="text-xs text-muted-foreground">TikTok</p>
-            <p className="text-2xl font-bold text-black dark:text-white">{tiktokProducts}</p>
+            <p className="text-xs text-slate-400">TikTok</p>
+            <p className="text-2xl font-bold text-purple-400">{tiktokProducts}</p>
           </div>
         </div>
       </div>
 
       {/* Filters */}
-      <Card className="hover:shadow-xl transition-all duration-500 overflow-hidden">
+      <Card className="group bg-gradient-to-br from-slate-900 to-slate-800 border-slate-700 hover:border-[#00D4FF]/30 transition-all duration-500 overflow-hidden">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <div className="p-1.5 rounded-lg bg-primary/10">
-              <Filter className="h-4 w-4 text-primary" />
+          <CardTitle className="flex items-center gap-2 text-white">
+            <div className="p-1.5 rounded-xl bg-[#00D4FF]/10">
+              <Filter className="h-4 w-4 text-[#00D4FF]" />
             </div>
             Filter & Pencarian
           </CardTitle>
@@ -199,39 +198,43 @@ export default function AdminProductsPage() {
         <CardContent>
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-500" />
               <Input
                 placeholder="Cari produk..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500 focus:border-[#00D4FF] focus:ring-[#00D4FF]/20 pl-10"
               />
             </div>
             <Select value={platformFilter} onValueChange={setPlatformFilter}>
-              <SelectTrigger className="w-full sm:w-40">
+              <SelectTrigger className="w-full sm:w-40 bg-slate-800/50 border-slate-700 text-white focus:border-[#00D4FF]">
                 <SelectValue placeholder="Semua Platform" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-slate-800 border-slate-700 text-white">
                 <SelectItem value="all">Semua Platform</SelectItem>
                 <SelectItem value="Shopee">Shopee</SelectItem>
                 <SelectItem value="TikTok">TikTok</SelectItem>
               </SelectContent>
             </Select>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full sm:w-40">
+              <SelectTrigger className="w-full sm:w-40 bg-slate-800/50 border-slate-700 text-white focus:border-[#00D4FF]">
                 <SelectValue placeholder="Semua Status" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-slate-800 border-slate-700 text-white">
                 <SelectItem value="all">Semua Status</SelectItem>
                 <SelectItem value="active">Aktif</SelectItem>
                 <SelectItem value="inactive">Nonaktif</SelectItem>
               </SelectContent>
             </Select>
-            <Button variant="outline" onClick={() => {
-              setSearchTerm('')
-              setPlatformFilter('all')
-              setStatusFilter('all')
-            }} className="gap-2">
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                setSearchTerm('')
+                setPlatformFilter('all')
+                setStatusFilter('all')
+              }} 
+              className="gap-2 border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white"
+            >
               <RefreshCw className="h-4 w-4" />
               Reset
             </Button>
@@ -240,64 +243,71 @@ export default function AdminProductsPage() {
       </Card>
 
       {/* Products Table */}
-      <Card className="hover:shadow-xl transition-all duration-500 overflow-hidden">
+      <Card className="group bg-gradient-to-br from-slate-900 to-slate-800 border-slate-700 hover:border-[#00D4FF]/30 transition-all duration-500 overflow-hidden">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <div className="p-1.5 rounded-lg bg-primary/10">
-              <Package className="h-4 w-4 text-primary" />
+          <CardTitle className="flex items-center gap-2 text-white">
+            <div className="p-1.5 rounded-xl bg-[#00D4FF]/10">
+              <Grid3x3 className="h-4 w-4 text-[#00D4FF]" />
             </div>
             Daftar Produk
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="rounded-lg border overflow-x-auto">
+          <div className="rounded-xl border border-slate-700 overflow-x-auto">
             <Table>
               <TableHeader>
-                <TableRow className="bg-muted/50">
-                  <TableHead>Nama Produk</TableHead>
-                  <TableHead>Platform</TableHead>
-                  <TableHead>Harga</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Aksi</TableHead>
+                <TableRow className="bg-slate-800/50 border-slate-700">
+                  <TableHead className="min-w-[200px] text-slate-300">Nama Produk</TableHead>
+                  <TableHead className="w-[100px] text-slate-300">Platform</TableHead>
+                  <TableHead className="w-[120px] text-slate-300">Harga</TableHead>
+                  <TableHead className="w-[100px] text-slate-300">Status</TableHead>
+                  <TableHead className="w-[140px] text-right text-slate-300">Aksi</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {loading ? (
                   <TableRow>
                     <TableCell colSpan={5} className="text-center py-12">
-                      <div className="flex items-center justify-center gap-2">
-                        <div className="h-5 w-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                      <div className="flex items-center justify-center gap-2 text-slate-400">
+                        <div className="h-5 w-5 border-2 border-[#00D4FF] border-t-transparent rounded-full animate-spin" />
                         Loading...
                       </div>
                     </TableCell>
                   </TableRow>
                 ) : filteredProducts.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-12 text-muted-foreground">
+                    <TableCell colSpan={5} className="text-center py-12 text-slate-500">
                       <Package className="h-12 w-12 mx-auto mb-3 opacity-50" />
                       Belum ada produk
+                      <div className="mt-3">
+                        <Button onClick={() => router.push('/admin/products/add')} size="sm" className="bg-gradient-to-r from-[#00D4FF] to-[#FF006E]">
+                          <Plus className="mr-2 h-4 w-4" />
+                          Tambah Produk Pertama
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredProducts.map((product, index) => (
-                    <TableRow 
-                      key={product.id} 
-                      className="hover:bg-muted/50 transition-colors"
-                    >
-                      <TableCell className="font-medium">{product.name}</TableCell>
+                  filteredProducts.map((product) => (
+                    <TableRow key={product.id} className="hover:bg-slate-800/50 transition-colors border-slate-700">
+                      <TableCell className="font-medium text-white">
+                        <div className="max-w-[250px] break-words">
+                          {product.name}
+                        </div>
+                      </TableCell>
                       <TableCell>
-                        <Badge className={`${product.platform === 'Shopee' ? 'bg-orange-500' : 'bg-black'} hover:opacity-80 transition-opacity`}>
-                          {product.platform}
+                        <Badge className={`${product.platform === 'Shopee' ? 'bg-orange-500/20 text-orange-400 border-orange-500/30' : 'bg-purple-500/20 text-purple-400 border-purple-500/30'} whitespace-nowrap`}>
+                          {product.platform === 'Shopee' ? '🛍️ Shopee' : '🎵 TikTok'}
                         </Badge>
                       </TableCell>
-                      <TableCell>{formatPrice(product.price)}</TableCell>
+                      <TableCell className="whitespace-nowrap text-slate-300">{formatPrice(product.price)}</TableCell>
                       <TableCell>
                         <Badge 
                           variant={product.is_active ? 'default' : 'secondary'}
-                          className={`cursor-pointer transition-all duration-300 ${
+                          className={`cursor-pointer transition-all duration-300 whitespace-nowrap ${
                             product.is_active 
-                              ? 'bg-green-500 hover:bg-green-600' 
-                              : 'bg-gray-500 hover:bg-gray-600'
+                              ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/30' 
+                              : 'bg-slate-500/20 text-slate-400 border-slate-500/30 hover:bg-slate-500/30'
                           }`}
                           onClick={() => toggleActive(product.id, product.is_active)}
                         >
@@ -307,12 +317,12 @@ export default function AdminProductsPage() {
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
                           <Link href={`/products/${product.slug}`} target="_blank">
-                            <Button variant="outline" size="sm" type="button">
+                            <Button variant="outline" size="sm" type="button" className="h-8 w-8 p-0 border-slate-700 hover:border-[#00D4FF] hover:text-[#00D4FF]">
                               <Eye className="h-4 w-4" />
                             </Button>
                           </Link>
                           <Link href={`/admin/products/edit/${product.id}`}>
-                            <Button variant="outline" size="sm" type="button">
+                            <Button variant="outline" size="sm" type="button" className="h-8 w-8 p-0 border-slate-700 hover:border-[#00D4FF] hover:text-[#00D4FF]">
                               <Edit className="h-4 w-4" />
                             </Button>
                           </Link>
@@ -320,6 +330,7 @@ export default function AdminProductsPage() {
                             variant="destructive" 
                             size="sm"
                             type="button"
+                            className="h-8 w-8 p-0 bg-red-500/20 text-red-400 hover:bg-red-500/30"
                             onClick={() => setDeleteId(product.id)}
                           >
                             <Trash2 className="h-4 w-4" />
@@ -336,15 +347,15 @@ export default function AdminProductsPage() {
       </Card>
 
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
-        <AlertDialogContent>
+        <AlertDialogContent className="bg-slate-900 border-slate-700">
           <AlertDialogHeader>
-            <AlertDialogTitle>Hapus Produk?</AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogTitle className="text-white">Hapus Produk?</AlertDialogTitle>
+            <AlertDialogDescription className="text-slate-400">
               Produk yang dihapus tidak dapat dikembalikan. Apakah Anda yakin?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Batal</AlertDialogCancel>
+            <AlertDialogCancel className="bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700">Batal</AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete} className="bg-red-500 hover:bg-red-600">
               Hapus
             </AlertDialogAction>

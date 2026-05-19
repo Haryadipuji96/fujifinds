@@ -1,29 +1,119 @@
-/* app/globals.css - Update with additional animations */
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
+/* Custom theme variables */
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Light mode */
+:root {
+  --background: 248 250 252;
+  --foreground: 15 23 42;
+  --primary: 139 92 246;
+  --primary-dark: 124 58 237;
+  --primary-light: 167 139 250;
+  --secondary: 6 182 212;
+  --accent: 245 158 11;
+  --card: 255 255 255;
+  --card-foreground: 15 23 42;
+  --border: 226 232 240;
+  --muted: 241 245 249;
+  --muted-foreground: 100 116 139;
+  --danger: 239 68 68;
+  --success: 34 197 94;
+  --warning: 245 158 11;
+  --info: 6 182 212;
+}
+
+/* Dark mode */
+.dark {
+  --background: 10 10 18;
+  --foreground: 250 250 250;
+  --primary: 139 92 246;
+  --primary-dark: 124 58 237;
+  --primary-light: 167 139 250;
+  --secondary: 6 182 212;
+  --accent: 245 158 11;
+  --card: 255 255 255;
+  --card-foreground: 15 23 42;
+  --border: 39 39 42;
+  --muted: 39 39 42;
+  --muted-foreground: 161 161 170;
+  --danger: 239 68 68;
+  --success: 34 197 94;
+  --warning: 245 158 11;
+  --info: 6 182 212;
+}
+
+/* FIX: Prevent horizontal scroll */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+}
+
+/* Base styles */
+body {
+  background: rgb(var(--background));
+  color: rgb(var(--foreground));
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  position: relative;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Light mode pattern */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  background-image: radial-gradient(circle at 1px 1px, rgba(139, 92, 246, 0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Dark mode pattern */
+.dark body::before {
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(6, 182, 212, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(245, 158, 11, 0.04) 0%, transparent 50%);
+}
+
+/* Main content above background */
+main, .container, section {
+  position: relative;
+  z-index: 1;
+}
+
+/* Container fix */
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@media (min-width: 1024px) {
+  .container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
 }
 
 /* Animations */
@@ -47,74 +137,21 @@ body {
   }
 }
 
-@keyframes slide-in-right {
-  from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slide-in-left {
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes scale-in {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
 @keyframes float {
   0%, 100% {
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(-20px);
+    transform: translateY(-15px);
   }
 }
 
-@keyframes float-delayed {
+@keyframes float-slow {
   0%, 100% {
-    transform: translateY(0px);
+    transform: translateY(0px) rotate(0deg);
   }
   50% {
-    transform: translateY(20px);
-  }
-}
-
-@keyframes gradient {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-@keyframes scroll {
-  0% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(-20px) rotate(5deg);
   }
 }
 
@@ -124,7 +161,7 @@ body {
     opacity: 0.5;
   }
   100% {
-    transform: scale(1.2);
+    transform: scale(1.5);
     opacity: 0;
   }
 }
@@ -138,6 +175,36 @@ body {
   }
 }
 
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(139, 92, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(139, 92, 246, 0.6);
+  }
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @keyframes bounce-subtle {
   0%, 100% {
     transform: translateY(0);
@@ -147,9 +214,54 @@ body {
   }
 }
 
+@keyframes wiggle {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-3deg);
+  }
+  75% {
+    transform: rotate(3deg);
+  }
+}
+
+@keyframes scan {
+  0% { 
+    transform: translateY(-100%); 
+  }
+  100% { 
+    transform: translateY(100vh); 
+  }
+}
+
+@keyframes blink {
+  0%, 100% { 
+    opacity: 1; 
+  }
+  50% { 
+    opacity: 0; 
+  }
+}
+
+@keyframes glitch-skew {
+  0%, 100% { 
+    transform: skew(0deg); 
+  }
+  95% { 
+    transform: skew(0deg); 
+  }
+  96% { 
+    transform: skew(5deg); 
+  }
+  97% { 
+    transform: skew(-5deg); 
+  }
+}
+
 /* Animation Classes */
 .animate-fade-in-up {
-  animation: fade-in-up 0.6s ease-out forwards;
+  animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   opacity: 0;
 }
 
@@ -157,33 +269,12 @@ body {
   animation: fade-in 0.4s ease-out forwards;
 }
 
-.animate-slide-in-right {
-  animation: slide-in-right 0.5s ease-out forwards;
-}
-
-.animate-slide-in-left {
-  animation: slide-in-left 0.5s ease-out forwards;
-}
-
-.animate-scale-in {
-  animation: scale-in 0.3s ease-out forwards;
-}
-
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
 
-.animate-float-delayed {
-  animation: float-delayed 8s ease-in-out infinite;
-}
-
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradient 10s ease infinite;
-}
-
-.animate-scroll {
-  animation: scroll 2s ease-in-out infinite;
+.animate-float-slow {
+  animation: float-slow 8s ease-in-out infinite;
 }
 
 .animate-pulse-ring {
@@ -196,44 +287,37 @@ body {
   animation: shimmer 2s infinite;
 }
 
+.animate-glow {
+  animation: glow 3s ease-in-out infinite;
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
+
 .animate-bounce-subtle {
   animation: bounce-subtle 2s ease-in-out infinite;
 }
 
+.animate-wiggle {
+  animation: wiggle 0.5s ease-in-out;
+}
+
 /* Animation Delays */
-.animation-delay-100 {
-  animation-delay: 100ms;
-}
+.animation-delay-100 { animation-delay: 100ms; }
+.animation-delay-200 { animation-delay: 200ms; }
+.animation-delay-300 { animation-delay: 300ms; }
+.animation-delay-400 { animation-delay: 400ms; }
+.animation-delay-500 { animation-delay: 500ms; }
+.animation-delay-700 { animation-delay: 700ms; }
+.animation-delay-1000 { animation-delay: 1000ms; }
 
-.animation-delay-200 {
-  animation-delay: 200ms;
-}
-
-.animation-delay-300 {
-  animation-delay: 300ms;
-}
-
-.animation-delay-400 {
-  animation-delay: 400ms;
-}
-
-.animation-delay-500 {
-  animation-delay: 500ms;
-}
-
-.animation-delay-600 {
-  animation-delay: 600ms;
-}
-
-.animation-delay-700 {
-  animation-delay: 700ms;
-}
-
-.animation-delay-800 {
-  animation-delay: 800ms;
-}
-
-/* Smooth scroll behavior */
+/* Smooth scroll */
 html {
   scroll-behavior: smooth;
 }
@@ -245,48 +329,515 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-  background: hsl(var(--muted));
+  background: #f1f1f1;
   border-radius: 10px;
 }
 
+.dark ::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--primary));
+  background: linear-gradient(135deg, rgb(139, 92, 246), rgb(236, 72, 153));
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--primary) / 0.8);
+  background: linear-gradient(135deg, rgb(124, 58, 237), rgb(219, 39, 119));
 }
 
-/* Glassmorphism Effect */
+/* Glassmorphism Effects */
 .glass {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.dark .glass {
+  background: rgba(24, 24, 27, 0.8);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.dark .glass {
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+.dark .glass-card {
+  background: rgba(24, 24, 27, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Card Hover Effect */
+/* Card hover effect */
 .card-hover {
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card-hover:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px -12px rgba(139, 92, 246, 0.3);
+  border-color: rgba(139, 92, 246, 0.4);
 }
 
-/* Button Gradient Animation */
+/* Gradient text */
+.text-gradient {
+  background: linear-gradient(135deg, rgb(139, 92, 246), rgb(236, 72, 153), rgb(245, 158, 11), rgb(6, 182, 212));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent !important;
+  background-size: 300% auto;
+  animation: gradient-shift 5s ease infinite;
+}
+
+.text-gradient-purple {
+  background: linear-gradient(135deg, rgb(139, 92, 246), rgb(167, 139, 250));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent !important;
+}
+
+.text-gradient-pink {
+  background: linear-gradient(135deg, rgb(236, 72, 153), rgb(244, 63, 94));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent !important;
+}
+
+/* Neon glow effect */
+.neon-glow {
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.3), 0 0 20px rgba(139, 92, 246, 0.2);
+}
+
+.neon-glow:hover {
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.5), 0 0 40px rgba(139, 92, 246, 0.3);
+}
+
+/* Button styles */
 .btn-gradient {
-  background: linear-gradient(90deg, #f97316, #000000, #f97316);
-  background-size: 200% 100%;
-  transition: background-position 0.3s ease;
+  background: linear-gradient(135deg, rgb(139, 92, 246), rgb(236, 72, 153));
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .btn-gradient:hover {
-  background-position: 100% 0;
+  background: linear-gradient(135deg, rgb(124, 58, 237), rgb(219, 39, 119));
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.5);
+}
+
+.btn-gradient:active {
+  transform: translateY(0);
+}
+
+/* Hero cyberpunk */
+.hero-cyberpunk {
+  position: relative;
+}
+
+.hero-cyberpunk .cyber-grid {
+  background-image: linear-gradient(rgba(6, 182, 212, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(6, 182, 212, 0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.dark .hero-cyberpunk .cyber-grid {
+  background-image: linear-gradient(rgba(6, 182, 212, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(6, 182, 212, 0.12) 1px, transparent 1px);
+}
+
+/* Cyberpunk card */
+.cyber-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(6, 182, 212, 0.2);
+  transition: all 0.3s ease;
+}
+
+.dark .cyber-card {
+  background: rgba(15, 23, 42, 0.8);
+}
+
+.cyber-card:hover {
+  border-color: rgba(6, 182, 212, 0.6);
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+  transform: translateY(-5px);
+}
+
+/* Scan line */
+.scan-line {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, #00ffff, #ff00ff, transparent);
+  opacity: 0.3;
+  pointer-events: none;
+  animation: scan 8s linear infinite;
+  z-index: 9999;
+}
+
+/* Glitch text */
+.glitch-text {
+  position: relative;
+  animation: glitch-skew 3s infinite;
+}
+
+/* Terminal text */
+.terminal-text {
+  font-family: 'Courier New', monospace;
+  letter-spacing: 1px;
+}
+
+.terminal-text::before {
+  content: '>';
+  margin-right: 8px;
+  color: rgb(6, 182, 212);
+}
+
+/* Loading skeleton */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.dark .skeleton {
+  background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
+}
+
+/* Badge animations */
+.badge-new {
+  animation: bounce-subtle 2s ease-in-out infinite;
+}
+
+.badge-hot {
+  animation: pulse-ring 1.5s ease-out infinite;
+}
+
+/* Hover scale */
+.hover-scale {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+/* Blinking cursor */
+.blinking-cursor {
+  animation: blink 1s step-end infinite;
+}
+
+/* ======================================== */
+/* DARK MODE SPECIFIC RULES - FINAL */
+/* ======================================== */
+
+/* 1. PRODUCT CARD - SAMA PERSIS DENGAN LIGHT MODE */
+.dark .group.rounded-xl,
+.dark .product-card,
+.dark [class*="ProductCard"] {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+.dark .group.rounded-xl .text-slate-700,
+.dark .group.rounded-xl .text-slate-800,
+.dark .group.rounded-xl h3,
+.dark .product-card .text-slate-700,
+.dark .product-card .text-slate-800,
+.dark .product-card h3 {
+  color: #1e293b !important;
+}
+
+.dark .group.rounded-xl .text-purple-600,
+.dark .group.rounded-xl .text-purple-500,
+.dark .product-card .text-purple-600,
+.dark .product-card .text-purple-500 {
+  color: #7c3aed !important;
+}
+
+.dark .group.rounded-xl .text-slate-400,
+.dark .group.rounded-xl .text-slate-500,
+.dark .product-card .text-slate-400,
+.dark .product-card .text-slate-500 {
+  color: #64748b !important;
+}
+
+/* 2. FOOTER - TIDAK BERUBAH DI DARK MODE (SEMUA TEXT HITAM/ABU SEPERTI LIGHT MODE) */
+.dark footer,
+.dark footer .w-full,
+.dark footer .bg-white,
+.dark footer .dark\:bg-slate-950 {
+  background-color: #ffffff !important;
+}
+
+.dark footer .border-slate-200,
+.dark footer .dark\:border-slate-800 {
+  border-color: #e2e8f0 !important;
+}
+
+/* Brand text - Affiliate Store & Premium Affiliate Partner */
+.dark footer .text-slate-500,
+.dark footer .dark\:text-slate-400,
+.dark footer .text-slate-600,
+.dark footer .text-slate-700,
+.dark footer .text-slate-800,
+.dark footer p.text-slate-600,
+.dark footer p.text-slate-500,
+.dark footer span.text-slate-500,
+.dark footer .text-xs.text-slate-500,
+.dark footer .text-sm.text-slate-600,
+.dark footer .text-sm.text-slate-500 {
+  color: #475569 !important;
+}
+
+/* Description text */
+.dark footer .leading-relaxed {
+  color: #475569 !important;
+}
+
+/* Newsletter text */
+.dark footer .text-slate-500.dark\:text-slate-400,
+.dark footer .mb-4.text-slate-500,
+.dark footer p.text-sm.text-slate-500 {
+  color: #475569 !important;
+}
+
+/* Copyright text */
+.dark footer .text-xs.text-slate-500,
+.dark footer .dark\:text-slate-400,
+.dark footer .text-slate-400 {
+  color: #475569 !important;
+}
+
+/* Heading titles (Quick Links, Contact Us, Newsletter) */
+.dark footer .font-semibold.text-slate-800,
+.dark footer .dark\:text-slate-200 {
+  color: #1e293b !important;
+}
+
+/* Link text */
+.dark footer .text-slate-500.dark\:text-slate-400,
+.dark footer a.text-sm.text-slate-500,
+.dark footer .hover\:text-purple-500 {
+  color: #475569 !important;
+}
+
+.dark footer a.text-sm.text-slate-500:hover,
+.dark footer .hover\:text-purple-500:hover {
+  color: #8b5cf6 !important;
+}
+
+/* Social media icons background */
+.dark footer .bg-slate-100,
+.dark footer .dark\:bg-slate-800 {
+  background-color: #f1f5f9 !important;
+}
+
+.dark footer .text-slate-600.dark\:text-slate-400,
+.dark footer .w-8.h-8 .text-slate-600 {
+  color: #475569 !important;
+}
+
+.dark footer .w-8.h-8:hover {
+  color: #ffffff !important;
+}
+
+/* Input field di newsletter */
+.dark footer input,
+.dark footer .bg-white.dark\:bg-slate-800,
+.dark footer .border-slate-200.dark\:border-slate-700 {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+  color: #1e293b !important;
+}
+
+.dark footer input::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Subscribe button */
+.dark footer button.bg-gradient-to-r {
+  background: linear-gradient(135deg, #8b5cf6, #ec4899) !important;
+}
+
+/* Bottom bar separator */
+.dark footer .border-t.border-slate-200,
+.dark footer .dark\:border-slate-800 {
+  border-color: #e2e8f0 !important;
+}
+
+/* Bottom bar text */
+.dark footer .text-xs.text-slate-500.dark\:text-slate-400,
+.dark footer .flex.flex-col.md\:flex-row .text-slate-500,
+.dark footer .gap-3.text-xs {
+  color: #475569 !important;
+}
+
+/* Separator line */
+.dark footer .text-slate-300.dark\:text-slate-600 {
+  color: #cbd5e1 !important;
+}
+
+/* 3. NAVBAR HOVER */
+.dark nav a:hover,
+.dark nav .hover\:bg-purple-100:hover {
+  background-color: #ffffff !important;
+  color: #8b5cf6 !important;
+}
+
+.dark nav .hover\:text-purple-600:hover,
+.dark nav .dark\:hover\:text-purple-400:hover {
+  color: #8b5cf6 !important;
+}
+
+/* 4. SELECT FIELD DI PLATFORM SLUG */
+.dark select,
+.dark .bg-white.dark\:bg-slate-900,
+.dark select option {
+  background-color: #1e293b !important;
+  color: #ffffff !important;
+}
+
+.dark select:focus {
+  border-color: #8b5cf6 !important;
+  outline: none !important;
+}
+
+/* 5. DELIVERY INFO (Gratis Ongkir, Garansi, Pengiriman Cepat) */
+.dark .flex.items-center.gap-1 .text-slate-600,
+.dark .flex.items-center.gap-1\.5 .text-slate-600,
+.dark .text-slate-600.dark\:text-slate-400 {
+  color: #1e293b !important;
+}
+
+/* 6. BUTTON BAGIKAN DAN WISHLIST */
+.dark .border-purple-500,
+.dark button.border-purple-500 {
+  border-color: #8b5cf6 !important;
+  color: #7c3aed !important;
+}
+
+.dark .border-purple-500:hover,
+.dark button.border-purple-500:hover {
+  background-color: #faf5ff !important;
+  color: #6d28d9 !important;
+}
+
+/* 7. TEXT DI LUAR CARD - PUTIH */
+.dark body,
+.dark main,
+.dark .container > section:not(.group.rounded-xl),
+.dark h1:not(.group.rounded-xl h1),
+.dark h2:not(.group.rounded-xl h2),
+.dark p:not(.group.rounded-xl p):not(footer p) {
+  color: rgb(var(--foreground)) !important;
+}
+
+/* 8. GRADIENT TEXT TETAP */
+.dark .text-gradient,
+.dark .text-gradient-purple,
+.dark .text-gradient-pink {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent !important;
+}
+
+/* 9. INPUT PLACEHOLDER */
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #64748b !important;
+}
+
+/* 10. FEATURE CARDS */
+.dark .bg-white\/50,
+.dark .dark\:bg-slate-900\/50 {
+  background-color: rgba(15, 23, 42, 0.5) !important;
+}
+
+.dark .bg-white\/50 .text-slate-800,
+.dark .dark\:bg-slate-900\/50 .text-slate-800 {
+  color: #ffffff !important;
+}
+
+/* ======================================== */
+/* ABOUT PAGE - COMPLETE DARK MODE STYLES */
+/* ======================================== */
+
+/* Force all text in about page to be readable in dark mode */
+.dark .min-h-screen.bg-gradient-to-b.from-slate-50.to-white {
+  background: linear-gradient(180deg, #0f172a, #0f172a) !important;
+}
+
+/* Stat Cards - Dark mode */
+.dark .text-center.p-4.md\:p-6.rounded-xl {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+.dark .text-center.p-4.md\:p-6.rounded-xl .text-2xl {
+  color: #ffffff !important;
+}
+
+.dark .text-center.p-4.md\:p-6.rounded-xl .text-xs {
+  color: #94a3b8 !important;
+}
+
+/* Our Story text */
+.dark .max-w-4xl.mx-auto .text-slate-600 {
+  color: #cbd5e1 !important;
+}
+
+/* Values Cards */
+.dark .group.relative.overflow-hidden.rounded-xl.p-5.md\:p-6 {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+.dark .group.relative.overflow-hidden.rounded-xl.p-5.md\:p-6 .text-slate-800 {
+  color: #ffffff !important;
+}
+
+.dark .group.relative.overflow-hidden.rounded-xl.p-5.md\:p-6 .text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+/* Platform Cards */
+.dark .w-20.h-20.md\:w-24.md\:h-24.rounded-full.bg-orange-100,
+.dark .w-20.h-20.md\:w-24.md\:h-24.rounded-full.bg-slate-100 {
+  background-color: #334155 !important;
+}
+
+.dark .text-orange-500 {
+  color: #f97316 !important;
+}
+
+.dark .text-slate-600.dark\:text-slate-400 {
+  color: #94a3b8 !important;
+}
+
+/* CTA Section - tetap menggunakan gradient yang sudah ada */
+.dark .bg-gradient-to-r.from-purple-600.to-pink-600 {
+  background: linear-gradient(135deg, #8b5cf6, #ec4899) !important;
+}
+
+/* All headings in about page */
+.dark .text-transparent.bg-clip-text.bg-gradient-to-r.from-purple-600.to-pink-600 {
+  background: linear-gradient(135deg, #c084fc, #f472b6) !important;
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+  color: transparent !important;
+}
+
+/* Subtitle text */
+.dark .text-slate-500.dark\:text-slate-400 {
+  color: #94a3b8 !important;
+}
+
+/* Value icons - sudah pakai gradient, tetap berwarna */
+.dark .w-10.h-10.md\:w-12.md\:h-12.rounded-lg.bg-gradient-to-br {
+  background: linear-gradient(135deg, #8b5cf6, #ec4899) !important;
 }

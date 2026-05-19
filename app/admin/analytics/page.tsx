@@ -1,4 +1,3 @@
-// app/admin/analytics/page.tsx
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -18,7 +17,7 @@ import {
   LineChart,
   Line
 } from 'recharts'
-import { TrendingUp, ShoppingBag, MousePointerClick, Zap, Activity, RefreshCw } from 'lucide-react'
+import { TrendingUp, ShoppingBag, MousePointerClick, Zap, Activity, RefreshCw, Crown, Target, Globe } from 'lucide-react'
 
 type ClickLog = {
   product_name: string
@@ -36,7 +35,7 @@ type PlatformStat = {
   value: number
 }
 
-const COLORS = ['#f97316', '#000000', '#3b82f6', '#10b981', '#8b5cf6']
+const COLORS = ['#00D4FF', '#FF006E', '#3B82F6', '#10B981', '#8B5CF6', '#F59E0B']
 
 export default function AnalyticsPage() {
   const [topProducts, setTopProducts] = useState<ProductStat[]>([])
@@ -52,7 +51,6 @@ export default function AnalyticsPage() {
 
   const fetchAnalytics = async (): Promise<void> => {
     setLoading(true)
-    // Top products by clicks
     const { data: clicksData } = await supabase
       .from('click_logs')
       .select('product_name, platform, clicked_at')
@@ -77,7 +75,6 @@ export default function AnalyticsPage() {
 
     setTopProducts(topProductsList)
 
-    // Platform distribution
     const shopeeCount = clicks.filter((c) => c.platform === 'Shopee').length
     const tiktokCount = clicks.filter((c) => c.platform === 'TikTok').length
 
@@ -86,7 +83,6 @@ export default function AnalyticsPage() {
       { name: 'TikTok', value: tiktokCount }
     ])
 
-    // Trend data last 7 days
     const last7Days = Array.from({ length: 7 }, (_, i) => {
       const date = new Date()
       date.setDate(date.getDate() - i)
@@ -118,86 +114,99 @@ export default function AnalyticsPage() {
   const tiktokPercentage = platformData[1] ? ((platformData[1].value / totalClicks) * 100).toFixed(1) : 0
 
   return (
-    <div className="space-y-8 animate-fade-in-up">
-      {/* Header with Refresh */}
+    <div className="space-y-8">
+      {/* Header with Refresh - Modern Glassmorphism */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-gradient-to-r from-primary to-primary/60 rounded-xl">
+            <div className="p-2.5 rounded-2xl bg-gradient-to-br from-[#00D4FF] to-[#FF006E] shadow-lg shadow-[#00D4FF]/20">
               <TrendingUp className="h-6 w-6 text-white" />
             </div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-              Analytics Dashboard
-            </h1>
+            <div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-[#00D4FF] via-[#FF006E] to-[#00D4FF] bg-clip-text text-transparent animate-gradient">
+                Analytics Dashboard
+              </h1>
+              <p className="text-slate-400 text-sm mt-0.5">Real-time affiliate performance insights</p>
+            </div>
           </div>
-          <p className="text-muted-foreground mt-1">Statistik performa affiliate secara real-time</p>
         </div>
         <button
           onClick={fetchAnalytics}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 hover:bg-primary/20 transition-all duration-300 group"
+          className="group relative overflow-hidden rounded-xl bg-slate-800/50 backdrop-blur-sm border border-slate-700 px-5 py-2.5 hover:border-[#00D4FF]/50 transition-all duration-300"
         >
-          <RefreshCw className="h-4 w-4 group-hover:rotate-180 transition-transform duration-500" />
-          <span className="text-sm">Refresh Data</span>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#00D4FF]/10 to-[#FF006E]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="relative flex items-center gap-2">
+            <RefreshCw className="h-4 w-4 group-hover:rotate-180 transition-transform duration-500 text-slate-400 group-hover:text-[#00D4FF]" />
+            <span className="text-sm text-slate-300 group-hover:text-white">Refresh Data</span>
+          </div>
         </button>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-orange-500/10 to-orange-500/5 border border-orange-500/20 p-6 hover:scale-105 transition-all duration-300">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500" />
+      {/* Stats Cards - Neon Theme */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700 p-6 hover:border-[#00D4FF]/50 transition-all duration-500 hover:shadow-xl hover:shadow-[#00D4FF]/10">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-[#00D4FF]/5 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
           <div className="relative">
-            <div className="flex items-center justify-between mb-3">
-              <ShoppingBag className="h-5 w-5 text-orange-500" />
-              <span className="text-xs text-muted-foreground">Total</span>
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-2.5 rounded-xl bg-[#00D4FF]/10 group-hover:bg-[#00D4FF]/20 transition-colors">
+                <ShoppingBag className="h-5 w-5 text-[#00D4FF]" />
+              </div>
+              <span className="text-xs px-2 py-1 rounded-full bg-slate-800 text-slate-500">Total</span>
             </div>
-            <div className="text-3xl font-bold text-orange-500">{totalClicks.toLocaleString()}</div>
-            <div className="text-sm text-muted-foreground mt-1">Total Klik</div>
-            <div className="mt-3 h-1 w-full bg-orange-500/20 rounded-full overflow-hidden">
-              <div className="h-full w-full bg-orange-500 rounded-full animate-pulse" style={{ width: '100%' }} />
+            <div className="text-4xl font-bold text-white mb-1">{totalClicks.toLocaleString()}</div>
+            <div className="text-sm text-slate-400">Total Clicks</div>
+            <div className="mt-4 h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+              <div className="h-full w-full bg-gradient-to-r from-[#00D4FF] to-[#FF006E] rounded-full animate-pulse" style={{ width: '100%' }} />
             </div>
           </div>
         </div>
 
-        <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-orange-500/10 to-orange-500/5 border border-orange-500/20 p-6 hover:scale-105 transition-all duration-300">
+        <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700 p-6 hover:border-[#00D4FF]/50 transition-all duration-500 hover:shadow-xl hover:shadow-[#00D4FF]/10">
           <div className="relative">
-            <div className="flex items-center justify-between mb-3">
-              <Zap className="h-5 w-5 text-orange-500" />
-              <span className="text-xs text-muted-foreground">Share</span>
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-2.5 rounded-xl bg-[#FF006E]/10 group-hover:bg-[#FF006E]/20 transition-colors">
+                <Zap className="h-5 w-5 text-[#FF006E]" />
+              </div>
+              <span className="text-xs px-2 py-1 rounded-full bg-slate-800 text-slate-500">Share</span>
             </div>
-            <div className="text-3xl font-bold text-orange-500">{shopeePercentage}%</div>
-            <div className="text-sm text-muted-foreground mt-1">Shopee Share</div>
-            <div className="mt-3 h-1 w-full bg-orange-500/20 rounded-full overflow-hidden">
-              <div className="h-full bg-orange-500 rounded-full transition-all duration-1000" style={{ width: `${shopeePercentage}%` }} />
+            <div className="text-4xl font-bold text-white mb-1">{shopeePercentage}%</div>
+            <div className="text-sm text-slate-400">Shopee Share</div>
+            <div className="mt-4 h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-[#FF006E] to-[#FF006E]/60 rounded-full transition-all duration-1000" style={{ width: `${shopeePercentage}%` }} />
             </div>
           </div>
         </div>
 
-        <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-black/10 to-black/5 border border-black/20 p-6 hover:scale-105 transition-all duration-300">
+        <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700 p-6 hover:border-[#00D4FF]/50 transition-all duration-500 hover:shadow-xl hover:shadow-[#00D4FF]/10">
           <div className="relative">
-            <div className="flex items-center justify-between mb-3">
-              <Activity className="h-5 w-5 text-black dark:text-white" />
-              <span className="text-xs text-muted-foreground">Share</span>
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-2.5 rounded-xl bg-purple-500/10 group-hover:bg-purple-500/20 transition-colors">
+                <Activity className="h-5 w-5 text-purple-400" />
+              </div>
+              <span className="text-xs px-2 py-1 rounded-full bg-slate-800 text-slate-500">Share</span>
             </div>
-            <div className="text-3xl font-bold text-black dark:text-white">{tiktokPercentage}%</div>
-            <div className="text-sm text-muted-foreground mt-1">TikTok Share</div>
-            <div className="mt-3 h-1 w-full bg-black/20 rounded-full overflow-hidden">
-              <div className="h-full bg-black dark:bg-white rounded-full transition-all duration-1000" style={{ width: `${tiktokPercentage}%` }} />
+            <div className="text-4xl font-bold text-white mb-1">{tiktokPercentage}%</div>
+            <div className="text-sm text-slate-400">TikTok Share</div>
+            <div className="mt-4 h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-purple-400 to-purple-400/60 rounded-full transition-all duration-1000" style={{ width: `${tiktokPercentage}%` }} />
             </div>
           </div>
         </div>
 
-        <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 p-6 hover:scale-105 transition-all duration-300">
+        <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700 p-6 hover:border-[#00D4FF]/50 transition-all duration-500 hover:shadow-xl hover:shadow-[#00D4FF]/10">
           <div className="relative">
-            <div className="flex items-center justify-between mb-3">
-              <MousePointerClick className="h-5 w-5 text-primary" />
-              <span className="text-xs text-muted-foreground">Peak</span>
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-2.5 rounded-xl bg-emerald-500/10 group-hover:bg-emerald-500/20 transition-colors">
+                <Crown className="h-5 w-5 text-emerald-400" />
+              </div>
+              <span className="text-xs px-2 py-1 rounded-full bg-slate-800 text-slate-500">Peak</span>
             </div>
-            <div className="text-3xl font-bold text-primary">
+            <div className="text-4xl font-bold text-white mb-1">
               {Math.max(...trendData.map(d => d.clicks), 0)}
             </div>
-            <div className="text-sm text-muted-foreground mt-1">Klik Tertinggi/Hari</div>
-            <div className="mt-3 h-1 w-full bg-primary/20 rounded-full overflow-hidden">
-              <div className="h-full bg-primary rounded-full animate-pulse" style={{ width: '100%' }} />
+            <div className="text-sm text-slate-400">Highest Daily Clicks</div>
+            <div className="mt-4 h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-emerald-400 to-emerald-400/60 rounded-full animate-pulse" style={{ width: '100%' }} />
             </div>
           </div>
         </div>
@@ -205,14 +214,14 @@ export default function AnalyticsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Trend Chart Card */}
-        <Card className="group hover:shadow-xl transition-all duration-500 overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700" />
+        <Card className="group bg-gradient-to-br from-slate-900 to-slate-800 border-slate-700 hover:border-[#00D4FF]/30 transition-all duration-500 overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#00D4FF]/5 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700" />
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                <Activity className="h-4 w-4 text-primary" />
+            <CardTitle className="flex items-center gap-2 text-white">
+              <div className="p-1.5 rounded-xl bg-[#00D4FF]/10">
+                <Activity className="h-4 w-4 text-[#00D4FF]" />
               </div>
-              Tren Klik 7 Hari Terakhir
+              7-Day Click Trend
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -222,18 +231,19 @@ export default function AnalyticsPage() {
                   <LineChart data={trendData}>
                     <defs>
                       <linearGradient id="lineGradient" x1="0" y1="0" x2="1" y2="0">
-                        <stop offset="0%" stopColor="#f97316" />
-                        <stop offset="100%" stopColor="#000000" />
+                        <stop offset="0%" stopColor="#00D4FF" />
+                        <stop offset="100%" stopColor="#FF006E" />
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--muted))" />
-                    <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" />
-                    <YAxis stroke="hsl(var(--muted-foreground))" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                    <XAxis dataKey="date" stroke="#64748B" />
+                    <YAxis stroke="#64748B" />
                     <Tooltip 
                       contentStyle={{ 
-                        backgroundColor: 'hsl(var(--background))',
-                        border: '1px solid hsl(var(--border))',
-                        borderRadius: '8px'
+                        backgroundColor: '#1E293B',
+                        border: '1px solid #334155',
+                        borderRadius: '12px',
+                        color: '#F1F5F9'
                       }}
                     />
                     <Line 
@@ -241,14 +251,14 @@ export default function AnalyticsPage() {
                       dataKey="clicks" 
                       stroke="url(#lineGradient)" 
                       strokeWidth={3}
-                      dot={{ fill: '#f97316', strokeWidth: 2, r: 4 }}
-                      activeDot={{ r: 6, fill: '#f97316' }}
+                      dot={{ fill: '#00D4FF', strokeWidth: 2, r: 4 }}
+                      activeDot={{ r: 6, fill: '#FF006E' }}
                     />
                   </LineChart>
                 </ResponsiveContainer>
               ) : (
-                <div className="flex items-center justify-center h-full text-muted-foreground">
-                  Belum ada data klik
+                <div className="flex items-center justify-center h-full text-slate-500">
+                  No click data available
                 </div>
               )}
             </div>
@@ -256,14 +266,14 @@ export default function AnalyticsPage() {
         </Card>
 
         {/* Top Products Card */}
-        <Card className="group hover:shadow-xl transition-all duration-500 overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/5 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700" />
+        <Card className="group bg-gradient-to-br from-slate-900 to-slate-800 border-slate-700 hover:border-[#00D4FF]/30 transition-all duration-500 overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF006E]/5 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700" />
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-orange-500/10 group-hover:bg-orange-500/20 transition-colors">
-                <TrendingUp className="h-4 w-4 text-orange-500" />
+            <CardTitle className="flex items-center gap-2 text-white">
+              <div className="p-1.5 rounded-xl bg-[#FF006E]/10">
+                <TrendingUp className="h-4 w-4 text-[#FF006E]" />
               </div>
-              Produk Paling Banyak Diklik
+              Top Performing Products
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -271,23 +281,24 @@ export default function AnalyticsPage() {
               {topProducts.length > 0 ? (
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={topProducts} layout="vertical" margin={{ left: 20 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--muted))" />
-                    <XAxis type="number" stroke="hsl(var(--muted-foreground))" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                    <XAxis type="number" stroke="#64748B" />
                     <YAxis 
                       type="category" 
                       dataKey="name" 
                       width={100}
-                      tick={{ fontSize: 12 }}
-                      stroke="hsl(var(--muted-foreground))"
+                      tick={{ fontSize: 12, fill: '#94A3B8' }}
+                      stroke="#64748B"
                     />
                     <Tooltip 
                       contentStyle={{ 
-                        backgroundColor: 'hsl(var(--background))',
-                        border: '1px solid hsl(var(--border))',
-                        borderRadius: '8px'
+                        backgroundColor: '#1E293B',
+                        border: '1px solid #334155',
+                        borderRadius: '12px',
+                        color: '#F1F5F9'
                       }}
                     />
-                    <Bar dataKey="clicks" fill="#f97316" radius={[0, 4, 4, 0]}>
+                    <Bar dataKey="clicks" radius={[0, 8, 8, 0]}>
                       {topProducts.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
@@ -295,8 +306,8 @@ export default function AnalyticsPage() {
                   </BarChart>
                 </ResponsiveContainer>
               ) : (
-                <div className="flex items-center justify-center h-full text-muted-foreground">
-                  Belum ada data klik
+                <div className="flex items-center justify-center h-full text-slate-500">
+                  No click data available
                 </div>
               )}
             </div>
@@ -306,13 +317,13 @@ export default function AnalyticsPage() {
 
       {/* Platform Distribution */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="group hover:shadow-xl transition-all duration-500 overflow-hidden">
+        <Card className="group bg-gradient-to-br from-slate-900 to-slate-800 border-slate-700 hover:border-[#00D4FF]/30 transition-all duration-500 overflow-hidden">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-gradient-to-r from-orange-500/10 to-black/10">
-                <ShoppingBag className="h-4 w-4 text-primary" />
+            <CardTitle className="flex items-center gap-2 text-white">
+              <div className="p-1.5 rounded-xl bg-gradient-to-r from-[#00D4FF]/20 to-[#FF006E]/20">
+                <Globe className="h-4 w-4 text-[#00D4FF]" />
               </div>
-              Distribusi Platform
+              Platform Distribution
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -342,16 +353,16 @@ export default function AnalyticsPage() {
                     </Pie>
                     <Tooltip 
                       contentStyle={{ 
-                        backgroundColor: 'hsl(var(--background))',
-                        border: '1px solid hsl(var(--border))',
-                        borderRadius: '8px'
+                        backgroundColor: '#1E293B',
+                        border: '1px solid #334155',
+                        borderRadius: '12px'
                       }}
                     />
                   </PieChart>
                 </ResponsiveContainer>
               ) : (
-                <div className="flex items-center justify-center h-full text-muted-foreground">
-                  Belum ada data klik
+                <div className="flex items-center justify-center h-full text-slate-500">
+                  No click data available
                 </div>
               )}
             </div>
@@ -359,36 +370,36 @@ export default function AnalyticsPage() {
         </Card>
 
         {/* Summary Card */}
-        <Card className="group hover:shadow-xl transition-all duration-500 overflow-hidden">
+        <Card className="group bg-gradient-to-br from-slate-900 to-slate-800 border-slate-700 hover:border-[#00D4FF]/30 transition-all duration-500 overflow-hidden">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-primary/10">
-                <Zap className="h-4 w-4 text-primary" />
+            <CardTitle className="flex items-center gap-2 text-white">
+              <div className="p-1.5 rounded-xl bg-[#00D4FF]/10">
+                <Target className="h-4 w-4 text-[#00D4FF]" />
               </div>
-              Ringkasan Performa
+              Performance Summary
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-6">
-              <div className="flex items-center justify-between p-4 rounded-xl bg-orange-500/5 border border-orange-500/10 hover:bg-orange-500/10 transition-all duration-300">
+            <div className="space-y-5">
+              <div className="flex items-center justify-between p-4 rounded-xl bg-gradient-to-r from-[#00D4FF]/10 to-transparent border border-[#00D4FF]/20 hover:border-[#00D4FF]/40 transition-all duration-300">
                 <div>
-                  <p className="text-sm text-muted-foreground">Total Klik Shopee</p>
-                  <p className="text-2xl font-bold text-orange-500">{platformData[0]?.value || 0}</p>
+                  <p className="text-sm text-slate-400">Total Shopee Clicks</p>
+                  <p className="text-2xl font-bold text-[#00D4FF]">{platformData[0]?.value || 0}</p>
                 </div>
-                <div className="w-12 h-12 rounded-full bg-orange-500/20 flex items-center justify-center">
-                  <ShoppingBag className="h-6 w-6 text-orange-500" />
+                <div className="w-12 h-12 rounded-full bg-[#00D4FF]/20 flex items-center justify-center">
+                  <ShoppingBag className="h-6 w-6 text-[#00D4FF]" />
                 </div>
               </div>
-              <div className="flex items-center justify-between p-4 rounded-xl bg-black/5 dark:bg-white/5 border border-black/10 hover:bg-black/10 dark:hover:bg-white/10 transition-all duration-300">
+              <div className="flex items-center justify-between p-4 rounded-xl bg-gradient-to-r from-purple-500/10 to-transparent border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300">
                 <div>
-                  <p className="text-sm text-muted-foreground">Total Klik TikTok</p>
-                  <p className="text-2xl font-bold text-black dark:text-white">{platformData[1]?.value || 0}</p>
+                  <p className="text-sm text-slate-400">Total TikTok Clicks</p>
+                  <p className="text-2xl font-bold text-purple-400">{platformData[1]?.value || 0}</p>
                 </div>
-                <div className="w-12 h-12 rounded-full bg-black/20 dark:bg-white/20 flex items-center justify-center">
-                  <Activity className="h-6 w-6 text-black dark:text-white" />
+                <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center">
+                  <Activity className="h-6 w-6 text-purple-400" />
                 </div>
               </div>
-              <div className="pt-4 text-center text-xs text-muted-foreground border-t">
+              <div className="pt-4 text-center text-xs text-slate-500 border-t border-slate-800">
                 Last updated: {lastUpdated.toLocaleTimeString()}
               </div>
             </div>
