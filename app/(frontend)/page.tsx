@@ -32,56 +32,55 @@ export default function HomePage() {
     return <Icon className="h-3 w-3 md:h-4 md:w-4" />
   }
 
-  useEffect(() => {
-    fetchProducts()
-    fetchTrendingProducts()
-    fetchCategories()
-  }, [])
 
   const fetchProducts = async () => {
-    try {
-      const { data } = await supabase
-        .from('products')
-        .select('*, categories(*)')
-        .eq('is_active', true)
-        .order('created_at', { ascending: false })
-        .limit(24)
-
-      setProducts(data || [])
-    } catch (error) {
-      console.error('Error fetching products:', error)
-    } finally {
-      setLoading(false)
-    }
+  try {
+    const { data } = await supabase
+      .from('products')
+      .select('*, categories(*)')
+      .eq('is_active', true)
+      .order('created_at', { ascending: false })
+      .limit(24)
+    setProducts(data || [])
+  } catch (error) {
+    console.error('Error fetching products:', error)
+  } finally {
+    setLoading(false)
   }
+}
 
-  const fetchTrendingProducts = async () => {
-    try {
-      const { data } = await supabase
-        .from('products')
-        .select('*, categories(*)')
-        .eq('is_active', true)
-        .eq('is_trending', true)
-        .limit(12)
-
-      setTrendingProducts(data || [])
-    } catch (error) {
-      console.error('Error fetching trending:', error)
-    }
+const fetchTrendingProducts = async () => {
+  try {
+    const { data } = await supabase
+      .from('products')
+      .select('*, categories(*)')
+      .eq('is_active', true)
+      .eq('is_trending', true)
+      .limit(12)
+    setTrendingProducts(data || [])
+  } catch (error) {
+    console.error('Error fetching trending:', error)
   }
+}
 
-  const fetchCategories = async () => {
-    try {
-      const { data } = await supabase
-        .from('categories')
-        .select('*')
-        .order('name', { ascending: true })
-
-      setCategories(data || [])
-    } catch (error) {
-      console.error('Error fetching categories:', error)
-    }
+const fetchCategories = async () => {
+  try {
+    const { data } = await supabase
+      .from('categories')
+      .select('*')
+      .order('name', { ascending: true })
+    setCategories(data || [])
+  } catch (error) {
+    console.error('Error fetching categories:', error)
   }
+}
+
+// 2. Baru useEffect yang memanggil function
+useEffect(() => {
+  fetchProducts()
+  fetchTrendingProducts()
+  fetchCategories()
+}, [])
 
   const handleBuyClick = async (productId: string) => {
     const product = products.find(p => p.id === productId) || trendingProducts.find(p => p.id === productId)

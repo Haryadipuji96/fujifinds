@@ -69,10 +69,7 @@ export default function EditProductPage() {
     is_trending: false
   })
 
-  useEffect(() => {
-    fetchCategories()
-    fetchProduct()
-  }, [productId])
+
 
   const fetchCategories = async () => {
     const { data } = await supabase
@@ -118,6 +115,11 @@ export default function EditProductPage() {
       setFetching(false)
     }
   }
+
+    useEffect(() => {
+    fetchCategories()
+    fetchProduct()
+  }, [productId])
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])

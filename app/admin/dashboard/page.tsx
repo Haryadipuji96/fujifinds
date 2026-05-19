@@ -31,10 +31,7 @@ export default function AdminDashboard() {
   const [lastUpdated, setLastUpdated] = useState(new Date())
   const supabase = createClient()
 
-  useEffect(() => {
-    fetchStats()
-    fetchChartData()
-  }, [])
+
 
   const fetchStats = async () => {
     const { count: productCount } = await supabase
@@ -87,6 +84,11 @@ export default function AdminDashboard() {
       setLastUpdated(new Date())
     }
   }
+
+    useEffect(() => {
+    fetchStats()
+    fetchChartData()
+  }, [])
 
   const handleRefresh = async () => {
     setLoading(true)

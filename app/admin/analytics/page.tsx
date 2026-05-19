@@ -45,9 +45,6 @@ export default function AnalyticsPage() {
   const [lastUpdated, setLastUpdated] = useState(new Date())
   const supabase = createClient()
 
-  useEffect(() => {
-    fetchAnalytics()
-  }, [])
 
   const fetchAnalytics = async (): Promise<void> => {
     setLoading(true)
@@ -83,6 +80,7 @@ export default function AnalyticsPage() {
       { name: 'TikTok', value: tiktokCount }
     ])
 
+
     const last7Days = Array.from({ length: 7 }, (_, i) => {
       const date = new Date()
       date.setDate(date.getDate() - i)
@@ -108,6 +106,11 @@ export default function AnalyticsPage() {
     setLastUpdated(new Date())
     setLoading(false)
   }
+
+
+      useEffect(() => {
+    fetchAnalytics()
+  }, [])
 
   const totalClicks = platformData.reduce((sum, item) => sum + item.value, 0)
   const shopeePercentage = platformData[0] ? ((platformData[0].value / totalClicks) * 100).toFixed(1) : 0

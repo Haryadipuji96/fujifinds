@@ -21,13 +21,7 @@ export default function AllProductsPage() {
   const [sortBy, setSortBy] = useState<'latest' | 'price-asc' | 'price-desc'>('latest')
   const supabase = createClient()
 
-  useEffect(() => {
-    fetchProducts()
-  }, [])
-
-  useEffect(() => {
-    filterAndSortProducts()
-  }, [products, searchTerm, selectedPlatform, sortBy])
+  
 
   const fetchProducts = async () => {
     setLoading(true)
@@ -74,6 +68,14 @@ export default function AllProductsPage() {
 
     setFilteredProducts(filtered)
   }
+
+  useEffect(() => {
+    fetchProducts()
+  }, [])
+
+  useEffect(() => {
+    filterAndSortProducts()
+  }, [products, searchTerm, selectedPlatform, sortBy])
 
   const handleBuyClick = async (productId: string) => {
     const product = products.find(p => p.id === productId)

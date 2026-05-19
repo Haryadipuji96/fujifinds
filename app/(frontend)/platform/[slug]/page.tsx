@@ -43,13 +43,7 @@ export default function PlatformPage() {
   
   const config = platformConfig[platform as keyof typeof platformConfig]
 
-  useEffect(() => {
-    fetchProducts()
-  }, [params.slug])
-
-  useEffect(() => {
-    filterAndSortProducts()
-  }, [products, searchTerm, sortBy])
+ 
 
   const fetchProducts = async () => {
     setLoading(true)
@@ -88,6 +82,14 @@ export default function PlatformPage() {
 
     setFilteredProducts(filtered)
   }
+
+   useEffect(() => {
+    fetchProducts()
+  }, [params.slug])
+
+  useEffect(() => {
+    filterAndSortProducts()
+  }, [products, searchTerm, sortBy])
 
   const handleBuyClick = async (productId: string) => {
     const product = products.find(p => p.id === productId)

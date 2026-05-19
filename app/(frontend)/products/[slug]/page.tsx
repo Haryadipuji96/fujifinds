@@ -23,47 +23,43 @@ export default function ProductDetailPage() {
     const [isWishlisted, setIsWishlisted] = useState(false)
     const supabase = createClient()
 
-    useEffect(() => {
-        if (params.slug) {
-            fetchProduct()
-        }
-        window.scrollTo(0, 0)
-    }, [params.slug])
-
     const fetchProduct = async () => {
-        setLoading(true)
+  setLoading(true)
+  const { data: productData, error: productError } = await supabase
+    .from('products')
+    .select('*, categories(*)')
+    .eq('slug', params.slug)
+    .eq('is_active', true)
+    .single()
 
-        const { data: productData, error: productError } = await supabase
-            .from('products')
-            .select('*, categories(*)')
-            .eq('slug', params.slug)
-            .eq('is_active', true)
-            .single()
+  if (productError || !productData) {
+    console.error('Product not found:', productError)
+    router.push('/')
+    return
+  }
 
-        if (productError || !productData) {
-            console.error('Product not found:', productError)
-            router.push('/')
-            return
-        }
+  setProduct(productData)
 
-        setProduct(productData)
+  if (productData.category_id) {
+    const { data: relatedData } = await supabase
+      .from('products')
+      .select('*, categories(*)')
+      .eq('category_id', productData.category_id)
+      .eq('is_active', true)
+      .neq('id', productData.id)
+      .limit(6)
+    if (relatedData) setRelatedProducts(relatedData)
+  }
+  setLoading(false)
+}
 
-        if (productData.category_id) {
-            const { data: relatedData } = await supabase
-                .from('products')
-                .select('*, categories(*)')
-                .eq('category_id', productData.category_id)
-                .eq('is_active', true)
-                .neq('id', productData.id)
-                .limit(6)
-
-            if (relatedData) {
-                setRelatedProducts(relatedData)
-            }
-        }
-
-        setLoading(false)
-    }
+// 2. Baru useEffect
+useEffect(() => {
+  if (params.slug) {
+    fetchProduct()
+  }
+  window.scrollTo(0, 0)
+}, [params.slug])
 
     const handleBuyClick = async (productId?: string) => {
         const targetProduct = productId ? relatedProducts.find(p => p.id === productId) : product
