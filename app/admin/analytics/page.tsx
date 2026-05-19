@@ -40,7 +40,11 @@ const COLORS = ['#00D4FF', '#FF006E', '#3B82F6', '#10B981', '#8B5CF6', '#F59E0B'
 export default function AnalyticsPage() {
   const [topProducts, setTopProducts] = useState<ProductStat[]>([])
   const [platformData, setPlatformData] = useState<PlatformStat[]>([])
-  const [trendData, setTrendData] = useState<any[]>([])
+ type TrendData = {
+  date: string
+  clicks: number
+}
+const [trendData, setTrendData] = useState<TrendData[]>([])
   const [loading, setLoading] = useState(true)
   const [lastUpdated, setLastUpdated] = useState(new Date())
   const supabase = createClient()

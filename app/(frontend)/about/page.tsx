@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Shield, Sparkles, Zap, Users, Award, Heart, ShoppingBag, Music2, TrendingUp, Star, Globe, Clock, ArrowLeft } from 'lucide-react'
+import { Shield, Zap, Users, Award, Heart, ShoppingBag, Music2, Star, Clock, ArrowLeft } from 'lucide-react'
 
 export default function AboutPage() {
   const router = useRouter()
