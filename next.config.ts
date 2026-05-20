@@ -1,9 +1,13 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from 'next'
+
+const nextConfig: NextConfig = {
   // Matikan ESLint saat build
-   eslint: { ignoreDuringBuilds: true },
-    typescript: { ignoreBuildErrors: true },
-  // Matikan warning/error untuk `any` type
+  eslint: { 
+    ignoreDuringBuilds: true 
+  },
+  typescript: { 
+    ignoreBuildErrors: true 
+  },
   swcMinify: true,
   
   images: {
@@ -25,10 +29,15 @@ const nextConfig = {
       },
     ],
   },
+
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '10mb',
+    },
+  },
   
-  // Tambahkan ini untuk menghilangkan warning lainnya
   reactStrictMode: false,
   output: 'standalone',
 }
 
-module.exports = nextConfig
+export default nextConfig
