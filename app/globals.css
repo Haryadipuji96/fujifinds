@@ -631,7 +631,7 @@ html {
   color: #8b5cf6 !important;
 }
 
-/* Social media icons background */
+/* Social media icons background - SAMA SEPERTI LIGHT MODE */
 .dark footer .bg-slate-100,
 .dark footer .dark\:bg-slate-800 {
   background-color: #f1f5f9 !important;
@@ -642,8 +642,26 @@ html {
   color: #475569 !important;
 }
 
+/* HOVER icon sosial media di dark mode - SAMA KAYAK LIGHT MODE (warna ikon berubah sesuai brand masing-masing) */
 .dark footer .w-8.h-8:hover {
   color: #ffffff !important;
+}
+
+/* Pastikan hover background icon berubah sesuai brand */
+.dark footer .hover\:bg-\[\#1877f2\]:hover {
+  background-color: #1877f2 !important;
+}
+
+.dark footer .hover\:bg-\[\#1da1f2\]:hover {
+  background-color: #1da1f2 !important;
+}
+
+.dark footer .hover\:bg-\[\#e4405f\]:hover {
+  background-color: #e4405f !important;
+}
+
+.dark footer .hover\:bg-\[\#ff0000\]:hover {
+  background-color: #ff0000 !important;
 }
 
 /* Input field di newsletter */
@@ -840,4 +858,69 @@ html {
 /* Value icons - sudah pakai gradient, tetap berwarna */
 .dark .w-10.h-10.md\:w-12.md\:h-12.rounded-lg.bg-gradient-to-br {
   background: linear-gradient(135deg, #8b5cf6, #ec4899) !important;
+}
+
+/* ======================================== */
+/* FIX: PRIVACY, TERMS, FAQ - GRADIENT CARDS DARK MODE */
+/* ======================================== */
+
+/* Memperbaiki card dengan gradient dari purple-50 ke pink-50 di dark mode */
+.dark .bg-gradient-to-r.from-purple-50.to-pink-50 {
+  background: linear-gradient(135deg, #1e1b4b, #2d1b3e) !important;
+  border-color: #8b5cf6 !important;
+}
+
+/* Memastikan background card tidak putih */
+.dark .rounded-xl.p-6.border,
+.dark .rounded-xl.p-6.border-purple-200 {
+  background: linear-gradient(135deg, #1e1b4b, #2d1b3e) !important;
+  border-color: #8b5cf6 !important;
+}
+
+/* Text heading di dalam card gradient */
+.dark .bg-gradient-to-r.from-purple-50.to-pink-50 .text-slate-800,
+.dark .rounded-xl.p-6.border .text-slate-800 {
+  color: #ffffff !important;
+}
+
+/* Text paragraf di dalam card gradient */
+.dark .bg-gradient-to-r.from-purple-50.to-pink-50 .text-slate-600,
+.dark .rounded-xl.p-6.border .text-slate-600 {
+  color: #cbd5e1 !important;
+}
+
+/* Email link di card kontak */
+.dark .text-purple-600 {
+  color: #a78bfa !important;
+}
+
+/* ======================================== */
+/* FIX: FAQ HUBUNGI KAMI CARD */
+/* ======================================== */
+
+/* Card "Masih punya pertanyaan?" di FAQ */
+.dark .mt-10.text-center.p-6.rounded-xl.bg-gradient-to-r.from-purple-50.to-pink-50 {
+  background: linear-gradient(135deg, #1e1b4b, #2d1b3e) !important;
+  border-color: #8b5cf6 !important;
+}
+
+/* Text heading di card tersebut */
+.dark .mt-10.text-center.p-6.rounded-xl .text-slate-800 {
+  color: #ffffff !important;
+}
+
+/* Text deskripsi */
+.dark .mt-10.text-center.p-6.rounded-xl .text-slate-600 {
+  color: #cbd5e1 !important;
+}
+
+/* Button di card tersebut */
+.dark .mt-10.text-center.p-6.rounded-xl .border-purple-500 {
+  border-color: #8b5cf6 !important;
+  color: #a78bfa !important;
+}
+
+.dark .mt-10.text-center.p-6.rounded-xl .border-purple-500:hover {
+  background-color: rgba(139, 92, 246, 0.2) !important;
+  color: #c4b5fd !important;
 }

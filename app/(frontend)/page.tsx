@@ -301,7 +301,7 @@ useEffect(() => {
       <section className="py-8 md:py-12 container mx-auto px-4">
         <div className="mb-4 md:mb-6">
           <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-purple-600 dark:from-cyan-400 dark:to-purple-500">
-            BARU NONGOL ✨
+            PRODUK TERBARU ✨
           </h2>
           <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400 font-mono mt-1">Produk fresh setiap hari, langsung dari affiliate terupdate</p>
         </div>

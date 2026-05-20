@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ShoppingBag, Menu, X, Sun, Moon, User } from 'lucide-react'
+import { ShoppingBag, Menu, X, Sun, Moon, User, Heart } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useTheme } from '@/components/theme-provider'
 
@@ -26,6 +26,7 @@ export default function Navbar() {
     { name: 'Shopee', href: '/platform/shopee' },
     { name: 'TikTok', href: '/platform/tiktok' },
     { name: 'Semua Produk', href: '/product' },
+      { name: 'Wishlist', href: '/wishlist' }, 
     { name: 'Tentang Kami', href: '/about' },
   ]
 
@@ -103,6 +104,18 @@ export default function Navbar() {
               >
                 <User className="h-5 w-5 text-slate-700 dark:text-slate-300" />
               </Button>
+
+
+
+<Link href="/wishlist">
+  <Button
+    variant="ghost"
+    size="icon"
+    className="rounded-full transition-all duration-300 hover:scale-110 hover:bg-purple-100 dark:hover:bg-purple-950/50 relative"
+  >
+    <Heart className="h-5 w-5 text-slate-700 dark:text-slate-300" />
+  </Button>
+</Link>
 
               <Button
                 variant="ghost"

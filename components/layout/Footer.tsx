@@ -19,10 +19,10 @@ export default function Footer() {
   const currentYear = new Date().getFullYear()
 
   const socialLinks = [
-    { icon: Globe, href: '#', name: 'Facebook', bg: 'hover:bg-[#1877f2]' },
-    { icon: Share2, href: '#', name: 'Twitter', bg: 'hover:bg-[#1da1f2]' },
-    { icon: Camera, href: '#', name: 'Instagram', bg: 'hover:bg-[#e4405f]' },
-    { icon: Play, href: '#', name: 'YouTube', bg: 'hover:bg-[#ff0000]' },
+    { icon: Globe, href: 'https://www.tiktok.com/@fujiharyadi735', name: 'Facebook', bg: 'hover:bg-[#1877f2]' },
+    { icon: Share2, href: 'https://web.telegram.org/k/', name: 'Twitter', bg: 'hover:bg-[#1da1f2]' },
+    { icon: Camera, href: 'https://www.instagram.com/puji_haryadi86/', name: 'Instagram', bg: 'hover:bg-[#e4405f]' },
+    { icon: Play, href: 'https://www.youtube.com/@fujiharyadi1411', name: 'YouTube', bg: 'hover:bg-[#ff0000]' },
   ]
 
   const quickLinks = [
@@ -30,6 +30,7 @@ export default function Footer() {
     { name: 'Shopee', href: '/platform/shopee' },
     { name: 'TikTok', href: '/platform/tiktok' },
     { name: 'Semua Produk', href: '/product' },
+     { name: 'Wishlist', href: '/wishlist' },
     { name: 'Tentang Kami', href: '/about' },
   ]
 
@@ -68,7 +69,7 @@ export default function Footer() {
                 {socialLinks.map(({ icon: Icon, bg, name }, i) => (
                   <a
                     key={i}
-                    href="#"
+                    href={socialLinks[i].href}
                     aria-label={name}
                     className={`w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 ${bg} hover:text-white hover:-translate-y-1 transition-all duration-300`}
                   >

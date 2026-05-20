@@ -1,13 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Matikan ESLint saat build
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  // Matikan TypeScript error saat build
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+   eslint: { ignoreDuringBuilds: true },
+    typescript: { ignoreBuildErrors: true },
   // Matikan warning/error untuk `any` type
   swcMinify: true,
   

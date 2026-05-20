@@ -6,6 +6,7 @@ import { ShoppingCart, Eye, Star, TrendingUp, Heart, Share2, ImageOff } from 'lu
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { formatPrice } from '@/lib/utils/utils'
+import { createClient } from '@/lib/supabase/client'
 import type { Product } from '@/types'
 import { useState, useEffect } from 'react'
 import toast from 'react-hot-toast'
@@ -20,6 +21,7 @@ export function ProductCard({ product, onBuyClick }: ProductCardProps) {
   const [isWishlisted, setIsWishlisted] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [imgError, setImgError] = useState(false)
+  const supabase = createClient()
   
   const discountPercentage = product.discount_price 
     ? Math.round(((product.price - product.discount_price) / product.price) * 100)
@@ -27,6 +29,39 @@ export function ProductCard({ product, onBuyClick }: ProductCardProps) {
 
   const hasMultipleImages = product.images && product.images.length > 1
   const imageUrl = product.images?.[currentImageIndex]
+
+  // Helper untuk mendapatkan atau membuat user_id
+  const getUserId = () => {
+    let userId = localStorage.getItem('user_id')
+    if (!userId) {
+      userId = 'guest_' + Math.random().toString(36).substr(2, 9)
+      localStorage.setItem('user_id', userId)
+    }
+    return userId
+  }
+
+  // Cek status wishlist saat component mount
+  useEffect(() => {
+    const checkWishlistStatus = async () => {
+      try {
+        const userId = getUserId()
+        const { data, error } = await supabase
+          .from('wishlist')
+          .select('id')
+          .eq('product_id', product.id)
+          .eq('user_id', userId)
+          .maybeSingle()
+        
+        if (error) throw error
+        setIsWishlisted(!!data)
+      } catch (error) {
+        console.error('Error checking wishlist:', error)
+        setIsWishlisted(false)
+      }
+    }
+    
+    checkWishlistStatus()
+  }, [product.id, supabase])
 
   useEffect(() => {
     setImgError(false)
@@ -37,11 +72,39 @@ export function ProductCard({ product, onBuyClick }: ProductCardProps) {
     setImgError(false)
   }, [currentImageIndex])
 
-  const handleWishlist = (e: React.MouseEvent) => {
+  const handleWishlist = async (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    setIsWishlisted(!isWishlisted)
-    toast.success(isWishlisted ? 'Dihapus dari wishlist' : 'Ditambahkan ke wishlist')
+    
+    try {
+      const userId = getUserId()
+      
+      if (isWishlisted) {
+        const { error } = await supabase
+          .from('wishlist')
+          .delete()
+          .eq('product_id', product.id)
+          .eq('user_id', userId)
+        
+        if (error) throw error
+        setIsWishlisted(false)
+        toast.success('Dihapus dari wishlist 💔')
+      } else {
+        const { error } = await supabase
+          .from('wishlist')
+          .insert({ 
+            product_id: product.id, 
+            user_id: userId 
+          })
+        
+        if (error) throw error
+        setIsWishlisted(true)
+        toast.success('Ditambahkan ke wishlist ❤️')
+      }
+    } catch (error) {
+      console.error('Wishlist error:', error)
+      toast.error('Gagal mengubah wishlist')
+    }
   }
 
   const handleShare = async (e: React.MouseEvent) => {
@@ -61,8 +124,8 @@ export function ProductCard({ product, onBuyClick }: ProductCardProps) {
 
   if (!imageUrl) {
     return (
-      <div className="group relative bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-lg transition-all duration-300">
-        <div className="relative overflow-hidden aspect-square bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+      <div className="group relative bg-white dark:bg-white rounded-xl overflow-hidden border border-slate-200 dark:border-slate-200 hover:shadow-lg transition-all duration-300 product-card">
+        <div className="relative overflow-hidden aspect-square bg-slate-100 dark:bg-slate-100 flex items-center justify-center">
           <div className="flex flex-col items-center gap-1 text-slate-400">
             <ImageOff className="h-8 w-8" />
             <span className="text-[10px]">No image</span>
@@ -70,12 +133,12 @@ export function ProductCard({ product, onBuyClick }: ProductCardProps) {
         </div>
         <div className="p-2.5">
           <Link href={`/products/${product.slug}`}>
-            <h3 className="text-xs font-medium line-clamp-2 text-slate-700 dark:text-slate-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors min-h-[2.5rem]">
+            <h3 className="text-xs font-medium line-clamp-2 text-slate-700 dark:text-slate-800 hover:text-purple-600 transition-colors min-h-[2.5rem]">
               {product.name}
             </h3>
           </Link>
           <div className="mt-1">
-            <span className="text-sm font-bold text-purple-600 dark:text-purple-400">{formatPrice(product.price)}</span>
+            <span className="text-sm font-bold text-purple-600 dark:text-purple-700">{formatPrice(product.price)}</span>
           </div>
         </div>
       </div>
@@ -83,14 +146,15 @@ export function ProductCard({ product, onBuyClick }: ProductCardProps) {
   }
 
   return (
+    
     <div 
-  className="group relative bg-white dark:bg-white rounded-xl overflow-hidden border border-slate-200 dark:border-slate-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer product-card"
-  onMouseEnter={() => setIsHovered(true)}
-  onMouseLeave={() => setIsHovered(false)}
-  onClick={handleProductClick}
->
+      className="group relative bg-white dark:bg-white rounded-xl overflow-hidden border border-slate-200 dark:border-slate-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer product-card"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={handleProductClick}
+    >
       {/* Image Container */}
-      <div className="block relative aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800">
+      <div className="block relative aspect-square overflow-hidden bg-slate-100 dark:bg-slate-100">
         <Image
           src={imageUrl}
           alt={product.name}
@@ -102,7 +166,7 @@ export function ProductCard({ product, onBuyClick }: ProductCardProps) {
         />
         
         {imgError && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-100 dark:bg-slate-800">
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-100 dark:bg-slate-100">
             <ImageOff className="h-8 w-8 text-slate-400" />
           </div>
         )}
@@ -182,42 +246,39 @@ export function ProductCard({ product, onBuyClick }: ProductCardProps) {
       
       {/* Content */}
       <div className="p-2.5">
-        <h3 className="text-xs font-medium line-clamp-2 text-slate-700 dark:text-slate-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors min-h-[2.5rem]">
+        <h3 className="text-xs font-medium line-clamp-2 text-slate-700 dark:text-slate-800 hover:text-purple-600 dark:hover:text-purple-600 transition-colors min-h-[2.5rem]">
           {product.name}
         </h3>
         
-        {/* Rating */}
         <div className="flex items-center gap-1 mt-1">
           <div className="flex items-center">
             {[...Array(5)].map((_, i) => (
               <Star 
                 key={i} 
-                className={`h-2.5 w-2.5 ${i < 4 ? 'fill-yellow-400 text-yellow-400' : 'text-slate-300 dark:text-slate-600'}`}
+                className={`h-2.5 w-2.5 ${i < 4 ? 'fill-yellow-400 text-yellow-400' : 'text-slate-300 dark:text-slate-300'}`}
               />
             ))}
           </div>
-          <span className="text-[10px] text-slate-400">(4.9)</span>
+          <span className="text-[10px] text-slate-500 dark:text-slate-600">(4.9)</span>
         </div>
         
-        {/* Price */}
         <div className="flex items-baseline gap-1 mt-1 flex-wrap">
           {product.discount_price ? (
             <>
-              <span className="text-sm font-bold text-purple-600 dark:text-purple-400">
+              <span className="text-sm font-bold text-purple-600 dark:text-purple-700">
                 {formatPrice(product.discount_price)}
               </span>
-              <span className="text-[10px] text-slate-400 line-through">
+              <span className="text-[10px] text-slate-400 dark:text-slate-500 line-through">
                 {formatPrice(product.price)}
               </span>
             </>
           ) : (
-            <span className="text-sm font-bold text-purple-600 dark:text-purple-400">
+            <span className="text-sm font-bold text-purple-600 dark:text-purple-700">
               {formatPrice(product.price)}
             </span>
           )}
         </div>
 
-        {/* Trending Badge */}
         {product.is_trending && (
           <div className="flex items-center gap-0.5 mt-1">
             <TrendingUp className="h-2.5 w-2.5 text-orange-500" />
@@ -225,7 +286,6 @@ export function ProductCard({ product, onBuyClick }: ProductCardProps) {
           </div>
         )}
 
-        {/* Mobile Buy Button */}
         <Button 
           size="sm"
           className="w-full mt-2 gap-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-xs py-1.5 h-auto rounded-lg md:hidden"

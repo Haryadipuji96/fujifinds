@@ -350,22 +350,57 @@ useEffect(() => {
                                 Bagikan
                             </Button>
                             
-                            <Button 
-                                size="lg" 
-                                variant="outline" 
-                                className={`gap-2 transition-all duration-300 rounded-xl text-sm md:text-base ${
-                                    isWishlisted 
-                                        ? 'bg-red-50 border-red-200 text-red-500 dark:bg-red-950/30 dark:border-red-800' 
-                                        : 'border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-950/50'
-                                }`}
-                                onClick={() => {
-                                    setIsWishlisted(!isWishlisted)
-                                    toast.success(isWishlisted ? '💔 Dihapus dari wishlist' : '❤️ Ditambahkan ke wishlist')
-                                }}
-                            >
-                                <Heart className={`h-4 w-4 ${isWishlisted ? 'fill-red-500 text-red-500 animate-pulse' : ''} transition-all duration-300`} />
-                                Wishlist
-                            </Button>
+                           <Button 
+  size="lg" 
+  variant="outline" 
+  className={`gap-2 transition-all duration-300 rounded-xl text-sm md:text-base ${
+    isWishlisted 
+      ? 'bg-red-50 border-red-200 text-red-500 dark:bg-red-950/30 dark:border-red-800' 
+      : 'border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-950/50'
+  }`}
+  onClick={async () => {
+    // 🔥 PAKAI LOGIC YANG SAMA DENGAN ProductCard
+    try {
+      // Dapatkan user_id
+      let userId = localStorage.getItem('user_id')
+      if (!userId) {
+        userId = 'guest_' + Math.random().toString(36).substr(2, 9)
+        localStorage.setItem('user_id', userId)
+      }
+      
+      if (isWishlisted) {
+        // Hapus dari wishlist
+        const { error } = await supabase
+          .from('wishlist')
+          .delete()
+          .eq('product_id', product.id)
+          .eq('user_id', userId)
+        
+        if (error) throw error
+        setIsWishlisted(false)
+        toast.success('💔 Dihapus dari wishlist')
+      } else {
+        // Tambah ke wishlist
+        const { error } = await supabase
+          .from('wishlist')
+          .insert({ 
+            product_id: product.id, 
+            user_id: userId 
+          })
+        
+        if (error) throw error
+        setIsWishlisted(true)
+        toast.success('❤️ Ditambahkan ke wishlist')
+      }
+    } catch (error) {
+      console.error('Wishlist error:', error)
+      toast.error('Gagal mengubah wishlist')
+    }
+  }}
+>
+  <Heart className={`h-4 w-4 ${isWishlisted ? 'fill-red-500 text-red-500 animate-pulse' : ''} transition-all duration-300`} />
+  Wishlist
+</Button>
                         </div>
 
                         {/* Trust Badges */}
