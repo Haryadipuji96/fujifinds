@@ -4,11 +4,12 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { ProductCard } from '@/components/product/ProductCard'
 import { Button } from '@/components/ui/button'
-import { Heart, ShoppingBag, ArrowLeft, Trash2, Sparkles, HeartPulse } from 'lucide-react'
+import { Heart, ShoppingBag, ArrowLeft, Trash2, HeartPulse, LogIn } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import type { Product } from '@/types'
 import toast from 'react-hot-toast'
 import Link from 'next/link'
+import { useSupabase } from '@/hooks/useSupabase'
 
 type WishlistItem = {
   id: string
@@ -20,63 +21,82 @@ type WishlistItem = {
 
 export default function WishlistPage() {
   const router = useRouter()
+  const { user } = useSupabase()
   const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([])
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
 
-  // Helper untuk mendapatkan user_id
-  const getUserId = () => {
-    if (typeof window === 'undefined') return null
-    let userId = localStorage.getItem('user_id')
-    if (!userId) {
-      userId = 'guest_' + Math.random().toString(36).substr(2, 9)
-      localStorage.setItem('user_id', userId)
-    }
-    return userId
-  }
-
-  // Fetch wishlist items
   const fetchWishlist = async () => {
     setLoading(true)
     try {
-      const userId = getUserId()
-      if (!userId) {
-        setWishlistItems([])
-        setLoading(false)
-        return
-      }
-
-      // Ambil data wishlist
-      const { data: wishlistData, error: wishlistError } = await supabase
-        .from('wishlist')
-        .select('*')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false })
-
-      if (wishlistError) throw wishlistError
-
-      if (wishlistData && wishlistData.length > 0) {
-        // Ambil semua product_id
-        const productIds = wishlistData.map(item => item.product_id)
-        
-        // Ambil data products berdasarkan id
-        const { data: productsData, error: productsError } = await supabase
-          .from('products')
+      // Jika user login, ambil dari database dengan user_id
+      if (user) {
+        const { data: wishlistData, error: wishlistError } = await supabase
+          .from('wishlist')
           .select('*')
-          .in('id', productIds)
-          .eq('is_active', true)
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
 
-        if (productsError) throw productsError
+        if (wishlistError) throw wishlistError
 
-        // Gabungkan data
-        const combined = wishlistData.map(wishlistItem => ({
-          ...wishlistItem,
-          products: productsData?.find(p => p.id === wishlistItem.product_id)
-        })).filter(item => item.products) // Hanya yang produknya masih ada
-        
-        setWishlistItems(combined)
-      } else {
-        setWishlistItems([])
+        if (wishlistData && wishlistData.length > 0) {
+          const productIds = wishlistData.map(item => item.product_id)
+          
+          const { data: productsData, error: productsError } = await supabase
+            .from('products')
+            .select('*')
+            .in('id', productIds)
+            .eq('is_active', true)
+
+          if (productsError) throw productsError
+
+          const combined = wishlistData.map(wishlistItem => ({
+            ...wishlistItem,
+            products: productsData?.find(p => p.id === wishlistItem.product_id)
+          })).filter(item => item.products)
+          
+          setWishlistItems(combined)
+        } else {
+          setWishlistItems([])
+        }
+      } 
+      // Jika guest, ambil dari localStorage
+      else {
+        const guestId = localStorage.getItem('user_id')
+        if (!guestId) {
+          setWishlistItems([])
+          setLoading(false)
+          return
+        }
+
+        const { data: wishlistData, error: wishlistError } = await supabase
+          .from('wishlist')
+          .select('*')
+          .eq('user_id', guestId)
+          .order('created_at', { ascending: false })
+
+        if (wishlistError) throw wishlistError
+
+        if (wishlistData && wishlistData.length > 0) {
+          const productIds = wishlistData.map(item => item.product_id)
+          
+          const { data: productsData, error: productsError } = await supabase
+            .from('products')
+            .select('*')
+            .in('id', productIds)
+            .eq('is_active', true)
+
+          if (productsError) throw productsError
+
+          const combined = wishlistData.map(wishlistItem => ({
+            ...wishlistItem,
+            products: productsData?.find(p => p.id === wishlistItem.product_id)
+          })).filter(item => item.products)
+          
+          setWishlistItems(combined)
+        } else {
+          setWishlistItems([])
+        }
       }
     } catch (error) {
       console.error('Error fetching wishlist:', error)
@@ -86,19 +106,28 @@ export default function WishlistPage() {
     }
   }
 
-  // Remove from wishlist
   const removeFromWishlist = async (productId: string) => {
     try {
-      const userId = getUserId()
-      if (!userId) return
+      if (user) {
+        const { error } = await supabase
+          .from('wishlist')
+          .delete()
+          .eq('product_id', productId)
+          .eq('user_id', user.id)
 
-      const { error } = await supabase
-        .from('wishlist')
-        .delete()
-        .eq('product_id', productId)
-        .eq('user_id', userId)
+        if (error) throw error
+      } else {
+        const guestId = localStorage.getItem('user_id')
+        if (!guestId) return
 
-      if (error) throw error
+        const { error } = await supabase
+          .from('wishlist')
+          .delete()
+          .eq('product_id', productId)
+          .eq('user_id', guestId)
+
+        if (error) throw error
+      }
 
       toast.success('Produk dihapus dari wishlist')
       fetchWishlist()
@@ -108,7 +137,6 @@ export default function WishlistPage() {
     }
   }
 
-  // Handle buy click
   const handleBuyClick = async (productId: string) => {
     const product = wishlistItems.find(item => item.product_id === productId)?.products
     if (!product) return
@@ -130,18 +158,26 @@ export default function WishlistPage() {
     }
   }
 
-  // Clear all wishlist
   const clearAllWishlist = async () => {
     try {
-      const userId = getUserId()
-      if (!userId) return
+      if (user) {
+        const { error } = await supabase
+          .from('wishlist')
+          .delete()
+          .eq('user_id', user.id)
 
-      const { error } = await supabase
-        .from('wishlist')
-        .delete()
-        .eq('user_id', userId)
+        if (error) throw error
+      } else {
+        const guestId = localStorage.getItem('user_id')
+        if (!guestId) return
 
-      if (error) throw error
+        const { error } = await supabase
+          .from('wishlist')
+          .delete()
+          .eq('user_id', guestId)
+
+        if (error) throw error
+      }
 
       toast.success('Semua produk dihapus dari wishlist')
       fetchWishlist()
@@ -153,7 +189,7 @@ export default function WishlistPage() {
 
   useEffect(() => {
     fetchWishlist()
-  }, [])
+  }, [user])
 
   const totalItems = wishlistItems.length
 
@@ -169,7 +205,6 @@ export default function WishlistPage() {
         </div>
         
         <div className="container mx-auto px-4 relative z-10">
-          {/* Tombol Kembali */}
           <Button
             variant="ghost"
             onClick={() => router.back()}
@@ -179,7 +214,6 @@ export default function WishlistPage() {
             Kembali
           </Button>
           
-          {/* Title & Description */}
           <div className="max-w-2xl">
             <div className="flex items-center gap-3 mb-4">
               <div className="p-2 rounded-xl bg-white/20 backdrop-blur-sm">
@@ -209,7 +243,6 @@ export default function WishlistPage() {
 
       {/* Wishlist Content */}
       <section className="py-8 md:py-12 container mx-auto px-4">
-        {/* Header Stats */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 md:mb-8">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-pink-100 dark:bg-pink-950/50 border border-pink-200 dark:border-pink-800">
@@ -237,7 +270,6 @@ export default function WishlistPage() {
           </Link>
         </div>
 
-        {/* Loading State */}
         {loading ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
             {[...Array(6)].map((_, i) => (
@@ -251,23 +283,44 @@ export default function WishlistPage() {
               </div>
             ))}
           </div>
-        ) : wishlistItems.length === 0 ? (
+        ) : !user && totalItems === 0 ? (
           <div className="text-center py-16 md:py-20">
             <div className="text-6xl md:text-7xl mb-4 animate-float">❤️</div>
             <h3 className="text-lg md:text-xl font-bold mb-2 text-slate-800 dark:text-white">Wishlist Masih Kosong</h3>
             <p className="text-sm md:text-base text-slate-500 dark:text-slate-400 mb-6">
               Yuk, tambahkan produk favoritmu ke wishlist dengan klik icon ❤️ di produk
             </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link href="/product">
+                <Button className="rounded-xl gap-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
+                  <ShoppingBag className="h-4 w-4" />
+                  Mulai Belanja
+                </Button>
+              </Link>
+              <Link href="/auth/login">
+                <Button variant="outline" className="gap-2 rounded-xl border-purple-500 text-purple-600 dark:text-purple-400">
+                  <LogIn className="h-4 w-4" />
+                  Login untuk menyimpan wishlist permanen
+                </Button>
+              </Link>
+            </div>
+          </div>
+        ) : totalItems === 0 ? (
+          <div className="text-center py-16 md:py-20">
+            <div className="text-6xl md:text-7xl mb-4 animate-float">❤️</div>
+            <h3 className="text-lg md:text-xl font-bold mb-2 text-slate-800 dark:text-white">Wishlist Masih Kosong</h3>
+            <p className="text-sm md:text-base text-slate-500 dark:text-slate-400 mb-6">
+              Belum ada produk di wishlist kamu. Yuk tambahkan!
+            </p>
             <Link href="/product">
               <Button className="rounded-xl gap-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
                 <ShoppingBag className="h-4 w-4" />
-                Mulai Belanja
+              Mulai Belanja
               </Button>
             </Link>
           </div>
         ) : (
           <>
-            {/* Product Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
               {wishlistItems.map((item, index) => (
                 <div key={item.id} className="relative group">
@@ -277,7 +330,6 @@ export default function WishlistPage() {
                       onBuyClick={handleBuyClick} 
                     />
                   )}
-                  {/* Tombol hapus di card */}
                   <button
                     onClick={(e) => {
                       e.stopPropagation()
@@ -290,11 +342,23 @@ export default function WishlistPage() {
                 </div>
               ))}
             </div>
+            {!user && totalItems > 0 && (
+              <div className="mt-8 p-4 rounded-xl bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30 text-center">
+                <p className="text-sm text-slate-600 dark:text-slate-300">
+                  💡 <strong>Tips:</strong> Login untuk menyimpan wishlist secara permanen! Wishlist kamu akan tersimpan meskipun ganti perangkat.
+                </p>
+                <Link href="/auth/login">
+                  <Button variant="outline" className="mt-2 gap-2">
+                    <LogIn className="h-4 w-4" />
+                    Login Sekarang
+                  </Button>
+                </Link>
+              </div>
+            )}
           </>
         )}
       </section>
 
-      {/* Tips Section */}
       {wishlistItems.length > 0 && (
         <section className="py-8 md:py-12 bg-gradient-to-b from-pink-50/30 to-purple-50/30 dark:from-pink-950/20 dark:to-purple-950/20">
           <div className="container mx-auto px-4 text-center">
@@ -302,7 +366,10 @@ export default function WishlistPage() {
               💡 Tips Belanja
             </h2>
             <p className="text-slate-500 dark:text-slate-400 text-sm max-w-2xl mx-auto">
-              Produk di wishlist akan tetap tersimpan. Jangan sampai kehabisan ya!
+              {user 
+                ? "Produk di wishlist akan tetap tersimpan di akun kamu. Jangan sampai kehabisan ya!"
+                : "Login sekarang untuk menyimpan wishlist secara permanen dan akses dari perangkat manapun!"
+              }
             </p>
           </div>
         </section>

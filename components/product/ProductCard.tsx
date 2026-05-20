@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { formatPrice } from '@/lib/utils/utils'
 import { createClient } from '@/lib/supabase/client'
+import { useSupabase } from '@/hooks/useSupabase'
 import type { Product } from '@/types'
 import { useState, useEffect } from 'react'
 import toast from 'react-hot-toast'
@@ -22,6 +23,7 @@ export function ProductCard({ product, onBuyClick }: ProductCardProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [imgError, setImgError] = useState(false)
   const supabase = createClient()
+  const { user } = useSupabase()
   
   const discountPercentage = product.discount_price 
     ? Math.round(((product.price - product.discount_price) / product.price) * 100)
@@ -30,8 +32,8 @@ export function ProductCard({ product, onBuyClick }: ProductCardProps) {
   const hasMultipleImages = product.images && product.images.length > 1
   const imageUrl = product.images?.[currentImageIndex]
 
-  // Helper untuk mendapatkan atau membuat user_id
   const getUserId = () => {
+    if (user) return user.id
     let userId = localStorage.getItem('user_id')
     if (!userId) {
       userId = 'guest_' + Math.random().toString(36).substr(2, 9)
@@ -40,7 +42,6 @@ export function ProductCard({ product, onBuyClick }: ProductCardProps) {
     return userId
   }
 
-  // Cek status wishlist saat component mount
   useEffect(() => {
     const checkWishlistStatus = async () => {
       try {
@@ -61,7 +62,7 @@ export function ProductCard({ product, onBuyClick }: ProductCardProps) {
     }
     
     checkWishlistStatus()
-  }, [product.id, supabase])
+  }, [product.id, user])
 
   useEffect(() => {
     setImgError(false)
@@ -99,7 +100,11 @@ export function ProductCard({ product, onBuyClick }: ProductCardProps) {
         
         if (error) throw error
         setIsWishlisted(true)
-        toast.success('Ditambahkan ke wishlist ❤️')
+        if (!user) {
+          toast.success('Ditambahkan ke wishlist ❤️ (Login untuk menyimpan permanen)')
+        } else {
+          toast.success('Ditambahkan ke wishlist ❤️')
+        }
       }
     } catch (error) {
       console.error('Wishlist error:', error)
@@ -146,7 +151,6 @@ export function ProductCard({ product, onBuyClick }: ProductCardProps) {
   }
 
   return (
-    
     <div 
       className="group relative bg-white dark:bg-white rounded-xl overflow-hidden border border-slate-200 dark:border-slate-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer product-card"
       onMouseEnter={() => setIsHovered(true)}

@@ -1573,3 +1573,310 @@ html {
 .admin-light .text-emerald-400 {
   color: #10b981 !important;
 }
+/* ======================================== */
+/* AUTH PAGES - LOGIN, REGISTER, FORGOT PASSWORD, UPDATE PASSWORD */
+/* ======================================== */
+
+/* Card styling untuk halaman auth */
+.auth-card {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(139, 92, 246, 0.2) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+.dark .auth-card {
+  background-color: rgba(15, 23, 42, 0.95) !important;
+  border: 1px solid rgba(139, 92, 246, 0.3) !important;
+}
+
+/* Input field styling */
+.auth-input {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 0.5rem !important;
+  transition: all 0.3s ease !important;
+  color: #1e293b !important;
+}
+
+.auth-input:focus {
+  border-color: #8b5cf6 !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1) !important;
+}
+
+.dark .auth-input {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f1f5f9 !important;
+}
+
+.dark .auth-input:focus {
+  border-color: #a78bfa !important;
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.15) !important;
+}
+
+.dark .auth-input::placeholder {
+  color: #64748b !important;
+}
+
+/* Label styling */
+.auth-label {
+  color: #334155 !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  margin-bottom: 0.5rem !important;
+  display: block !important;
+}
+
+.dark .auth-label {
+  color: #e2e8f0 !important;
+}
+
+/* Icon di dalam input */
+.auth-icon {
+  color: #94a3b8 !important;
+  transition: color 0.3s ease !important;
+}
+
+.input-group:focus-within .auth-icon {
+  color: #8b5cf6 !important;
+}
+
+.dark .input-group:focus-within .auth-icon {
+  color: #a78bfa !important;
+}
+
+/* Separator "Atau" */
+.auth-separator {
+  border-color: #e2e8f0 !important;
+}
+
+.dark .auth-separator {
+  border-color: #334155 !important;
+}
+
+.auth-separator-text {
+  background-color: #ffffff !important;
+  color: #64748b !important;
+  font-size: 0.75rem !important;
+  padding: 0 0.75rem !important;
+}
+
+.dark .auth-separator-text {
+  background-color: #0f172a !important;
+  color: #94a3b8 !important;
+}
+
+/* ======================================== */
+/* SUBMIT BUTTON - SESUAI KEINGINAN LO */
+/* ======================================== */
+
+/* LIGHT MODE: Background gradient, Text HITAM */
+.auth-submit-btn {
+  background: linear-gradient(135deg, #8b5cf6, #ec4899) !important;
+  color: #1e293b !important;
+  font-weight: 600 !important;
+  padding: 0.75rem 1rem !important;
+  border-radius: 0.5rem !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  width: 100% !important;
+  font-size: 0.875rem !important;
+  text-align: center !important;
+}
+
+.auth-submit-btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.4) !important;
+}
+
+.auth-submit-btn:disabled {
+  opacity: 0.6 !important;
+  transform: none !important;
+  cursor: not-allowed !important;
+}
+
+/* DARK MODE: Background gradient tetap, Text PUTIH */
+.dark .auth-submit-btn {
+  background: linear-gradient(135deg, #8b5cf6, #ec4899) !important;
+  color: #ffffff !important;
+}
+
+/* ======================================== */
+/* LINK STYLING - DARK MODE TEXT PURPLE */
+/* ======================================== */
+
+/* Light mode: Link warna default (abu-abu kehitaman) */
+.auth-link {
+  font-weight: 500 !important;
+  transition: all 0.3s ease !important;
+  text-decoration: none !important;
+}
+
+.auth-link:hover {
+  text-decoration: underline !important;
+}
+
+/* Dark mode: Link warna PURPLE */
+.dark .auth-link {
+  color: #c084fc !important;
+}
+
+.dark .auth-link:hover {
+  color: #d8b4fe !important;
+}
+
+/* Google button */
+.auth-google-btn {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #1e293b !important;
+  font-weight: 500 !important;
+  border-radius: 0.5rem !important;
+  padding: 0.625rem 1rem !important;
+  transition: all 0.3s ease !important;
+  cursor: pointer !important;
+  width: 100% !important;
+}
+
+.auth-google-btn:hover {
+  background-color: #f8fafc !important;
+  border-color: #8b5cf6 !important;
+  transform: translateY(-1px) !important;
+}
+
+.dark .auth-google-btn {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #e2e8f0 !important;
+}
+
+.dark .auth-google-btn:hover {
+  background-color: #334155 !important;
+  border-color: #a78bfa !important;
+}
+
+/* Card header gradient text */
+.auth-card-title {
+  background: linear-gradient(135deg, #8b5cf6, #ec4899) !important;
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+  color: transparent !important;
+  font-weight: 700 !important;
+}
+
+/* Success/Info message */
+.auth-success-card {
+  background: linear-gradient(135deg, #10b981, #34d399) !important;
+  color: #ffffff !important;
+}
+
+.dark .auth-success-card {
+  background: linear-gradient(135deg, #059669, #10b981) !important;
+}
+
+/* Error message styling */
+.auth-error {
+  color: #ef4444 !important;
+  font-size: 0.75rem !important;
+  margin-top: 0.25rem !important;
+}
+
+.dark .auth-error {
+  color: #f87171 !important;
+}
+
+/* Background pattern untuk auth pages */
+.auth-bg-pattern {
+  background-image: radial-gradient(circle at 1px 1px, rgba(139, 92, 246, 0.08) 1px, transparent 1px) !important;
+  background-size: 40px 40px !important;
+}
+
+.dark .auth-bg-pattern {
+  background-image: radial-gradient(circle at 1px 1px, rgba(139, 92, 246, 0.15) 1px, transparent 1px) !important;
+}
+
+/* Container auth page biar full screen */
+.auth-container {
+  min-height: 100vh !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 1rem !important;
+}
+
+/* Password toggle button styling */
+.auth-password-toggle {
+  color: #94a3b8 !important;
+  transition: color 0.3s ease !important;
+}
+
+.auth-password-toggle:hover {
+  color: #8b5cf6 !important;
+}
+
+.dark .auth-password-toggle:hover {
+  color: #a78bfa !important;
+}
+
+/* Heading text di card */
+.auth-card h2,
+.auth-card h3 {
+  color: #1e293b !important;
+}
+
+.dark .auth-card h2,
+.dark .auth-card h3 {
+  color: #f1f5f9 !important;
+}
+
+/* Text description kecil */
+.auth-description {
+  color: #64748b !important;
+}
+
+.dark .auth-description {
+  color: #94a3b8 !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .auth-card {
+    margin: 1rem !important;
+    padding: 1.5rem !important;
+  }
+  
+  .auth-card-title {
+    font-size: 1.5rem !important;
+  }
+}
+
+/* ======================================== */
+/* FORCE BUTTON STYLING UNTUK AUTH PAGES */
+/* ======================================== */
+
+/* Target semua button submit di halaman auth */
+form button[type="submit"],
+button.auth-submit-override {
+  background: linear-gradient(135deg, #8b5cf6, #ec4899) !important;
+  color: #1e293b !important;
+  font-weight: 600 !important;
+}
+
+.dark form button[type="submit"],
+.dark button.auth-submit-override {
+  color: #ffffff !important;
+}
+
+/* Target link di halaman auth saat dark mode */
+.dark .text-purple-600,
+.dark a.text-purple-600 {
+  color: #c084fc !important;
+}
+
+.dark .text-purple-600:hover,
+.dark a.text-purple-600:hover {
+  color: #d8b4fe !important;
+}
