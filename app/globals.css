@@ -924,3 +924,652 @@ html {
   background-color: rgba(139, 92, 246, 0.2) !important;
   color: #c4b5fd !important;
 }
+
+/* ======================================== */
+/* DESKRIPSI PRODUK - RAPIH DENGAN LINE BREAK */
+/* ======================================== */
+
+/* Mempertahankan line break dan spasi di deskripsi produk */
+.product-description {
+  white-space: pre-line;
+  word-break: break-word;
+}
+
+/* Atau langsung target semua elemen dengan class tertentu */
+.deskripsi-produk,
+.product-description-text {
+  white-space: pre-line;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+/* Style tambahan untuk membuat deskripsi lebih rapi */
+.produk-deskripsi {
+  white-space: pre-line;
+  font-size: 0.875rem;
+  line-height: 1.75;
+  color: #475569;
+}
+
+.dark .produk-deskripsi {
+  color: #cbd5e1;
+}
+
+/* ======================================== */
+/* REACT MARKDOWN STYLING */
+/* ======================================== */
+
+/* Prose styling untuk konten markdown */
+.prose {
+  color: rgb(var(--foreground));
+  max-width: none;
+}
+
+.prose p {
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+}
+
+.prose ul, .prose ol {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.prose li {
+  margin-bottom: 0.25rem;
+}
+
+.prose h1, .prose h2, .prose h3 {
+  font-weight: 600;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose h1 { font-size: 1.5rem; }
+.prose h2 { font-size: 1.25rem; }
+.prose h3 { font-size: 1.125rem; }
+
+.prose strong {
+  font-weight: 600;
+  color: inherit;
+}
+
+.prose a {
+  color: #8b5cf6;
+  text-decoration: underline;
+}
+
+.prose a:hover {
+  color: #7c3aed;
+}
+
+/* Dark mode markdown */
+.dark .prose {
+  color: #cbd5e1;
+}
+
+.dark .prose strong {
+  color: #f1f5f9;
+}
+
+.dark .prose a {
+  color: #a78bfa;
+}
+
+/* ======================================== */
+/* ADMIN THEME - INDEPENDENT FROM FRONTEND */
+/* ======================================== */
+
+/* Admin Dark Mode (Default) */
+.admin-dark body {
+  background: #0f172a;
+  color: #f1f5f9;
+}
+
+.admin-dark .bg-gradient-to-br.from-slate-900 {
+  background: linear-gradient(135deg, #0f172a, #1e293b) !important;
+}
+
+/* ======================================== */
+/* ADMIN LIGHT MODE - FULL THEME */
+/* ======================================== */
+
+/* Admin Light Mode - Body */
+.admin-light {
+  --admin-bg: #f1f5f9;
+  --admin-card: #ffffff;
+  --admin-text: #0f172a;
+  --admin-text-muted: #475569;
+  --admin-border: #e2e8f0;
+  --admin-sidebar: #ffffff;
+  --admin-sidebar-text: #1e293b;
+  --admin-sidebar-hover: #f1f5f9;
+  --admin-sidebar-border: #e2e8f0;
+}
+
+/* Admin Light Mode - Background Utama */
+.admin-light body {
+  background: var(--admin-bg) !important;
+  color: var(--admin-text) !important;
+}
+
+/* Admin Light Mode - Main Content Area */
+.admin-light .min-h-screen.bg-gradient-to-br {
+  background: linear-gradient(135deg, #f1f5f9, #e2e8f0) !important;
+}
+
+/* ========== ADMIN LIGHT MODE - LOGO TEXT HITAM ========== */
+
+/* Logo text di light mode - hilangkan gradient, jadi hitam */
+.admin-light aside .bg-gradient-to-r.from-\[\#00D4FF\].to-\[\#FF006E\].bg-clip-text.text-transparent {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  color: #0f172a !important;
+}
+
+/* Alternatif jika selector di atas tidak bekerja */
+.admin-light aside .bg-gradient-to-r.from-\[\#00D4FF\].to-\[\#FF006E\],
+.admin-light aside .bg-clip-text.text-transparent {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  color: #0f172a !important;
+}
+
+/* Logo text di dark mode tetap gradient */
+.admin-dark aside .bg-gradient-to-r.from-\[\#00D4FF\].to-\[\#FF006E\].bg-clip-text.text-transparent {
+  background: linear-gradient(135deg, #00D4FF, #FF006E) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+/* ======================================== */
+/* ADMIN LIGHT MODE - QUICK FIX CHECKBOX */
+/* ======================================== */
+
+.admin-light .border-slate-600 {
+  border-color: #cbd5e1 !important;
+}
+
+.admin-light [type="checkbox"] {
+  background-color: #fff !important;
+  border-color: #cbd5e1 !important;
+}
+
+.admin-light [type="checkbox"]:checked {
+  background-color: #8b5cf6 !important;
+  border-color: #8b5cf6 !important;
+}
+
+.admin-light .bg-red-500\/20 {
+  background-color: #fee2e2 !important;
+}
+
+.admin-light .text-red-400 {
+  color: #dc2626 !important;
+}
+
+.admin-light .bg-emerald-500\/20 {
+  background-color: #d1fae5 !important;
+}
+
+.admin-light .text-emerald-400 {
+  color: #059669 !important;
+}
+
+.admin-light .bg-orange-500\/20 {
+  background-color: #fed7aa !important;
+}
+
+.admin-light .text-orange-400 {
+  color: #ea580c !important;
+}
+
+.admin-light .bg-purple-500\/20 {
+  background-color: #e9d5ff !important;
+}
+
+.admin-light .text-purple-400 {
+  color: #9333ea !important;
+}
+
+.admin-light .bg-slate-500\/20 {
+  background-color: #e2e8f0 !important;
+}
+
+.admin-light .text-slate-400 {
+  color: #64748b !important;
+}
+
+/* Button hover di light mode */
+.admin-light .hover\:border-\[\#00D4FF\]:hover {
+  border-color: #8b5cf6 !important;
+}
+
+.admin-light .hover\:text-\[\#00D4FF\]:hover {
+  color: #8b5cf6 !important;
+}
+
+/* ======================================== */
+/* ADMIN LIGHT MODE - CHECKBOX FIX */
+/* ======================================== */
+
+/* Checkbox container di light mode */
+.admin-light .checkbox-root,
+.admin-light [role="checkbox"],
+.admin-light button[role="checkbox"] {
+  background-color: #ffffff !important;
+  border: 2px solid #cbd5e1 !important;
+  border-radius: 4px !important;
+}
+
+/* Checkbox saat hover */
+.admin-light .checkbox-root:hover,
+.admin-light [role="checkbox"]:hover {
+  border-color: #8b5cf6 !important;
+  background-color: #faf5ff !important;
+}
+
+/* Checkbox saat checked */
+.admin-light .checkbox-root[data-state="checked"],
+.admin-light [role="checkbox"][data-state="checked"] {
+  background-color: #8b5cf6 !important;
+  border-color: #8b5cf6 !important;
+}
+
+/* Icon check di dalam checkbox */
+.admin-light .checkbox-root[data-state="checked"] svg,
+.admin-light [role="checkbox"][data-state="checked"] svg {
+  color: #ffffff !important;
+}
+
+/* Checkbox di tabel */
+.admin-light .border-slate-600 {
+  border-color: #cbd5e1 !important;
+}
+
+.admin-light .data-[state=checked]:bg-primary,
+.admin-light .data-[state=checked]:text-primary-foreground {
+  background-color: #8b5cf6 !important;
+  color: #ffffff !important;
+}
+
+/* Force override untuk checkbox shadcn */
+.admin-light button[data-state="unchecked"] {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+}
+
+.admin-light button[data-state="checked"] {
+  background-color: #8b5cf6 !important;
+  border-color: #8b5cf6 !important;
+}
+
+.admin-light button[data-state="checked"] svg {
+  color: #ffffff !important;
+}
+
+/* ========== SIDEBAR LIGHT MODE ========== */
+.admin-light aside,
+.admin-light .bg-gradient-to-b.from-slate-900.to-slate-800 {
+  background: var(--admin-sidebar) !important;
+  border-right-color: var(--admin-sidebar-border) !important;
+}
+
+/* Sidebar text */
+.admin-light aside .text-slate-400,
+.admin-light aside .text-slate-500 {
+  color: var(--admin-sidebar-text) !important;
+}
+
+.admin-light aside .text-slate-400:hover,
+.admin-light aside .text-slate-500:hover {
+  color: #8b5cf6 !important;
+}
+
+/* Sidebar menu items */
+.admin-light aside .hover\:bg-slate-800:hover {
+  background-color: var(--admin-sidebar-hover) !important;
+}
+
+.admin-light aside .group:hover .text-slate-400 {
+  color: #8b5cf6 !important;
+}
+
+/* Active menu item */
+.admin-light aside .bg-gradient-to-r.from-\[\#00D4FF\]\/20.to-\[\#FF006E\]\/20 {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1)) !important;
+  border-color: #8b5cf6 !important;
+}
+
+.admin-light aside .bg-gradient-to-r.from-\[\#00D4FF\]\/20.to-\[\#FF006E\]\/20 .text-\[\#00D4FF\] {
+  color: #8b5cf6 !important;
+}
+
+/* Sidebar border */
+.admin-light aside .border-slate-700 {
+  border-color: var(--admin-sidebar-border) !important;
+}
+
+/* Sidebar logo text */
+.admin-light aside .bg-gradient-to-r.from-\[\#00D4FF\].to-\[\#FF006E\] {
+  background: linear-gradient(135deg, #8b5cf6, #ec4899) !important;
+}
+
+.admin-light aside .bg-clip-text.text-transparent {
+  background: linear-gradient(135deg, #8b5cf6, #ec4899) !important;
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+  color: transparent !important;
+}
+
+.admin-light aside .text-slate-500 {
+  color: #64748b !important;
+}
+
+/* ========== CARDS & CONTENT LIGHT MODE ========== */
+.admin-light .bg-slate-900,
+.admin-light .bg-slate-800,
+.admin-light .bg-slate-800\/50,
+.admin-light .bg-slate-800\/30 {
+  background-color: var(--admin-card) !important;
+}
+
+/* Card borders */
+.admin-light .border-slate-700,
+.admin-light .border-slate-800 {
+  border-color: var(--admin-border) !important;
+}
+
+/* Card text */
+.admin-light .text-slate-200,
+.admin-light .text-slate-300,
+.admin-light .text-slate-100 {
+  color: var(--admin-text) !important;
+}
+
+.admin-light .text-slate-400,
+.admin-light .text-slate-500 {
+  color: var(--admin-text-muted) !important;
+}
+
+/* Headings */
+.admin-light h1, 
+.admin-light h2, 
+.admin-light h3, 
+.admin-light h4,
+.admin-light .text-white {
+  color: var(--admin-text) !important;
+}
+
+/* Gradient text in cards */
+.admin-light .bg-gradient-to-r.from-\[\#00D4FF\].via-\[\#FF006E\] {
+  background: linear-gradient(135deg, #8b5cf6, #ec4899) !important;
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+  color: transparent !important;
+}
+
+/* ========== FORM INPUTS LIGHT MODE ========== */
+.admin-light input,
+.admin-light .bg-slate-800\/50,
+.admin-light .bg-slate-800 {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+.admin-light input::placeholder {
+  color: #94a3b8 !important;
+}
+
+.admin-light input:focus {
+  border-color: #8b5cf6 !important;
+  ring-color: rgba(139, 92, 246, 0.2) !important;
+}
+
+/* Select inputs */
+.admin-light select,
+.admin-light .bg-slate-800 {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+/* Textarea */
+.admin-light textarea {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+/* ========== BUTTONS LIGHT MODE ========== */
+.admin-light button.bg-gradient-to-r {
+  background: linear-gradient(135deg, #8b5cf6, #ec4899) !important;
+}
+
+.admin-light button.bg-gradient-to-r span {
+  color: #ffffff !important;
+}
+
+.admin-light button.variant-ghost,
+.admin-light .hover\:bg-slate-800:hover {
+  background-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+/* ========== TABLE LIGHT MODE ========== */
+.admin-light table {
+  background-color: #ffffff !important;
+}
+
+.admin-light thead th {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important;
+}
+
+.admin-light tbody td {
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+.admin-light tbody tr:hover {
+  background-color: #f1f5f9 !important;
+}
+
+/* ========== MODAL/DROPDOWN LIGHT MODE ========== */
+.admin-light .bg-slate-800,
+.admin-light .bg-slate-900 {
+  background-color: #ffffff !important;
+}
+
+.admin-light .border-slate-700 {
+  border-color: #e2e8f0 !important;
+}
+
+/* ========== SCROLLBAR ADMIN LIGHT MODE ========== */
+.admin-light ::-webkit-scrollbar-track {
+  background: #e2e8f0;
+}
+
+.admin-light ::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+}
+
+/* ========== LOGIN PAGE ADMIN LIGHT MODE ========== */
+.admin-light .bg-slate-900\/80 {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.admin-light .border-slate-700 {
+  border-color: #e2e8f0 !important;
+}
+
+.admin-light .text-slate-300 {
+  color: #334155 !important;
+}
+
+.admin-light .text-slate-400 {
+  color: #64748b !important;
+}
+
+.admin-light .text-slate-500 {
+  color: #475569 !important;
+}
+
+/* ========== DASHBOARD CARDS LIGHT MODE ========== */
+
+/* Card container di dashboard */
+.admin-light .rounded-2xl.bg-gradient-to-br.from-slate-900.to-slate-800,
+.admin-light .rounded-2xl.bg-gradient-to-br {
+  background: linear-gradient(135deg, #ffffff, #f8fafc) !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Card hover effect */
+.admin-light .rounded-2xl.bg-gradient-to-br.from-slate-900.to-slate-800:hover {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1) !important;
+  border-color: #cbd5e1 !important;
+}
+
+/* Card title text */
+.admin-light .text-slate-200,
+.admin-light .text-slate-300,
+.admin-light .card-title,
+.admin-light [class*="CardTitle"] {
+  color: #0f172a !important;
+}
+
+/* Card description text */
+.admin-light .text-slate-400,
+.admin-light .text-slate-500,
+.admin-light .card-description {
+  color: #475569 !important;
+}
+
+/* Stat numbers in cards */
+.admin-light .text-4xl.font-bold.text-white,
+.admin-light .text-3xl.font-bold.text-white,
+.admin-light .text-2xl.font-bold.text-white {
+  color: #0f172a !important;
+}
+
+/* Stat labels */
+.admin-light .text-sm.text-slate-400 {
+  color: #64748b !important;
+}
+
+/* Icon backgrounds in cards */
+.admin-light .bg-\[\#00D4FF\]\/10,
+.admin-light .bg-\[\#FF006E\]\/10,
+.admin-light .bg-purple-500\/10,
+.admin-light .bg-orange-500\/10,
+.admin-light .bg-emerald-500\/10 {
+  background-color: rgba(139, 92, 246, 0.1) !important;
+}
+
+.admin-light .bg-\[\#00D4FF\]\/10 .text-\[\#00D4FF\],
+.admin-light .bg-\[\#FF006E\]\/10 .text-\[\#FF006E\] {
+  color: #8b5cf6 !important;
+}
+
+/* ========== PRODUCT CARDS ADMIN LIGHT MODE ========== */
+
+/* Product card container */
+.admin-light .bg-slate-800,
+.admin-light .bg-slate-900,
+.admin-light .rounded-xl.bg-slate-800,
+.admin-light .rounded-xl.bg-slate-900 {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+/* Product card text */
+.admin-light .text-slate-200,
+.admin-light .text-slate-300,
+.admin-light .text-slate-100 {
+  color: #0f172a !important;
+}
+
+/* Product card muted text */
+.admin-light .text-slate-400,
+.admin-light .text-slate-500 {
+  color: #64748b !important;
+}
+
+/* Product card border hover */
+.admin-light .rounded-xl.bg-slate-800:hover {
+  border-color: #8b5cf6 !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* ========== ANALYTICS CARDS LIGHT MODE ========== */
+
+/* Chart cards */
+.admin-light .bg-gradient-to-br.from-slate-900.to-slate-800 {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+/* Chart text */
+.admin-light .recharts-text,
+.admin-light .recharts-cartesian-axis-tick-value {
+  fill: #475569 !important;
+}
+
+/* Chart grid lines */
+.admin-light .recharts-cartesian-grid line {
+  stroke: #e2e8f0 !important;
+}
+
+/* ========== BUTTONS IN CARDS LIGHT MODE ========== */
+
+/* Outline buttons */
+.admin-light .border-slate-700 {
+  border-color: #cbd5e1 !important;
+}
+
+.admin-light .hover\:bg-slate-800:hover {
+  background-color: #f1f5f9 !important;
+}
+
+/* ========== PROGRESS BARS LIGHT MODE ========== */
+
+/* Progress bar background */
+.admin-light .bg-slate-800 {
+  background-color: #e2e8f0 !important;
+}
+
+/* Progress bar fill */
+.admin-light .bg-gradient-to-r.from-\[\#00D4FF\].to-\[\#FF006E\] {
+  background: linear-gradient(135deg, #8b5cf6, #ec4899) !important;
+}
+
+/* ========== BADGES LIGHT MODE ========== */
+
+/* Badge styling */
+.admin-light .bg-slate-800,
+.admin-light .rounded-full.bg-slate-800 {
+  background-color: #f1f5f9 !important;
+  color: #475569 !important;
+}
+
+.admin-light .bg-red-500\/20 {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+}
+
+.admin-light .text-red-400 {
+  color: #ef4444 !important;
+}
+
+.admin-light .bg-emerald-500\/20 {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+}
+
+.admin-light .text-emerald-400 {
+  color: #10b981 !important;
+}

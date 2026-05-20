@@ -9,7 +9,10 @@ const jakarta = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-jakart
 
 export const metadata: Metadata = {
   title: 'Affiliate Store - Produk Terbaik dari Shopee & TikTok',
-  description: 'Temukan produk terbaik dengan harga terbaik dari Shopee dan TikTok Shop',
+  description: 'Temukan produk terbaik dengan harga terbaik',
+  icons: {
+    icon: '/icon.png',
+  },
 }
 
 export const viewport: Viewport = {

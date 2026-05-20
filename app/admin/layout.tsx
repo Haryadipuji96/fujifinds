@@ -14,10 +14,14 @@ import {
   ChevronLeft,
   ChevronRight,
   Sparkles,
-  Zap
+  Zap,
+  Sun,
+  Moon
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import toast from 'react-hot-toast'
+import { useSessionActivity } from '@/hooks/useSessionActivity'
+import { AdminThemeProvider, useAdminTheme } from '@/components/admin/AdminThemeProvider'
 
 const menuItems = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -25,15 +29,14 @@ const menuItems = [
   { href: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
 ]
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+function AdminLayoutContent({ children }: { children: React.ReactNode }) {
+  const { adminTheme, setAdminTheme } = useAdminTheme()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
+
+  useSessionActivity()
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -56,12 +59,11 @@ export default function AdminLayout({
   }, [])
 
   useEffect(() => {
-  // Tambahkan class ke body untuk styling admin
-  document.body.classList.add('admin-layout')
-  return () => {
-    document.body.classList.remove('admin-layout')
-  }
-}, [])
+    document.body.classList.add('admin-layout')
+    return () => {
+      document.body.classList.remove('admin-layout')
+    }
+  }, [])
 
   const handleLogout = async () => {
     try {
@@ -83,6 +85,10 @@ export default function AdminLayout({
       console.error('Logout error:', error)
       toast.error('Terjadi kesalahan')
     }
+  }
+
+  const toggleTheme = () => {
+    setAdminTheme(adminTheme === 'dark' ? 'light' : 'dark')
   }
 
   return (
@@ -163,11 +169,27 @@ export default function AdminLayout({
             })}
           </nav>
 
-          {/* Logout Button */}
-          <div className={`p-4 border-t border-slate-700 ${collapsed ? 'flex justify-center' : ''}`}>
+          {/* Theme Toggle & Logout Button */}
+          <div className={`p-4 border-t border-slate-700 space-y-2 ${collapsed ? 'flex flex-col items-center' : ''}`}>
+            {/* Theme Toggle Button */}
             <Button
               variant="ghost"
-              className={`${collapsed ? 'w-auto px-3' : 'w-full justify-start gap-3'} text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl`}
+              onClick={toggleTheme}
+              className={`${collapsed ? 'w-auto px-3 justify-center' : 'w-full justify-start gap-3'} text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl`}
+              title={collapsed ? (adminTheme === 'dark' ? 'Light Mode' : 'Dark Mode') : undefined}
+            >
+              {adminTheme === 'dark' ? (
+                <Sun className="h-5 w-5" />
+              ) : (
+                <Moon className="h-5 w-5" />
+              )}
+              {!collapsed && <span>{adminTheme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>}
+            </Button>
+
+            {/* Logout Button */}
+            <Button
+              variant="ghost"
+              className={`${collapsed ? 'w-auto px-3 justify-center' : 'w-full justify-start gap-3'} text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl`}
               onClick={handleLogout}
               title={collapsed ? 'Logout' : undefined}
             >
@@ -185,5 +207,13 @@ export default function AdminLayout({
         </div>
       </main>
     </div>
+  )
+}
+
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <AdminThemeProvider>
+      <AdminLayoutContent>{children}</AdminLayoutContent>
+    </AdminThemeProvider>
   )
 }

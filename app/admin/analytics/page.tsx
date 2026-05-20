@@ -38,6 +38,7 @@ type PlatformStat = {
 const COLORS = ['#00D4FF', '#FF006E', '#3B82F6', '#10B981', '#8B5CF6', '#F59E0B']
 
 export default function AnalyticsPage() {
+  const [mounted, setMounted] = useState(false)
   const [topProducts, setTopProducts] = useState<ProductStat[]>([])
   const [platformData, setPlatformData] = useState<PlatformStat[]>([])
  type TrendData = {
@@ -48,6 +49,10 @@ const [trendData, setTrendData] = useState<TrendData[]>([])
   const [loading, setLoading] = useState(true)
   const [lastUpdated, setLastUpdated] = useState(new Date())
   const supabase = createClient()
+
+    useEffect(() => {
+    setMounted(true) // 🔥 TAMBAHKAN INI
+  }, [])
 
 
   const fetchAnalytics = async (): Promise<void> => {
@@ -272,54 +277,48 @@ const [trendData, setTrendData] = useState<TrendData[]>([])
           </CardContent>
         </Card>
 
-        {/* Top Products Card */}
-        <Card className="group bg-gradient-to-br from-slate-900 to-slate-800 border-slate-700 hover:border-[#00D4FF]/30 transition-all duration-500 overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF006E]/5 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700" />
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-white">
-              <div className="p-1.5 rounded-xl bg-[#FF006E]/10">
-                <TrendingUp className="h-4 w-4 text-[#FF006E]" />
-              </div>
-              Top Performing Products
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[350px]">
-              {topProducts.length > 0 ? (
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={topProducts} layout="vertical" margin={{ left: 20 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                    <XAxis type="number" stroke="#64748B" />
-                    <YAxis 
-                      type="category" 
-                      dataKey="name" 
-                      width={100}
-                      tick={{ fontSize: 12, fill: '#94A3B8' }}
-                      stroke="#64748B"
-                    />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: '#1E293B',
-                        border: '1px solid #334155',
-                        borderRadius: '12px',
-                        color: '#F1F5F9'
-                      }}
-                    />
-                    <Bar dataKey="clicks" radius={[0, 8, 8, 0]}>
-                      {topProducts.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="flex items-center justify-center h-full text-slate-500">
-                  No click data available
-                </div>
-              )}
+       {/* Top Products Card - Horizontal Bar Chart */}
+<Card className="group bg-gradient-to-br from-slate-900 to-slate-800 border-slate-700 hover:border-[#00D4FF]/30 transition-all duration-500 overflow-hidden">
+  <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF006E]/5 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700" />
+  <CardHeader>
+    <CardTitle className="flex items-center gap-2 text-white">
+      <div className="p-1.5 rounded-xl bg-[#FF006E]/10">
+        <TrendingUp className="h-4 w-4 text-[#FF006E]" />
+      </div>
+      Top Performing Products
+    </CardTitle>
+  </CardHeader>
+  <CardContent>
+    <div className="space-y-3">
+      {topProducts.length > 0 ? (
+        topProducts.map((product, idx) => (
+          <div key={idx} className="group relative">
+            <div className="flex items-center justify-between mb-1 text-xs">
+              <span className="text-slate-300 truncate max-w-[200px] md:max-w-[300px]" title={product.name}>
+                {product.name.length > 30 ? product.name.substring(0, 30) + '...' : product.name}
+              </span>
+              <span className="text-[#00D4FF] font-semibold">{product.clicks} clicks</span>
             </div>
-          </CardContent>
-        </Card>
+            <div className="relative h-8 bg-slate-800 rounded-lg overflow-hidden">
+              <div 
+                className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#00D4FF] to-[#FF006E] rounded-lg transition-all duration-1000 flex items-center justify-end px-3"
+                style={{ width: `${(product.clicks / topProducts[0].clicks) * 100}%` }}
+              >
+                <span className="text-xs font-bold text-white">
+                  {Math.round((product.clicks / topProducts[0].clicks) * 100)}%
+                </span>
+              </div>
+            </div>
+          </div>
+        ))
+      ) : (
+        <div className="flex items-center justify-center h-32 text-slate-500">
+          No click data available
+        </div>
+      )}
+    </div>
+  </CardContent>
+</Card>
       </div>
 
       {/* Platform Distribution */}
@@ -406,9 +405,9 @@ const [trendData, setTrendData] = useState<TrendData[]>([])
                   <Activity className="h-6 w-6 text-purple-400" />
                 </div>
               </div>
-              <div className="pt-4 text-center text-xs text-slate-500 border-t border-slate-800">
-                Last updated: {lastUpdated.toLocaleTimeString()}
-              </div>
+              <div className="pt-4 text-center text-xs text-slate-500 border-t border-slate-800" suppressHydrationWarning>
+  Last updated: {typeof window !== 'undefined' ? lastUpdated.toLocaleTimeString() : 'Loading...'}
+</div>
             </div>
           </CardContent>
         </Card>

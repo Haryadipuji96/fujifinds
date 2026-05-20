@@ -25,30 +25,33 @@ export default function AdminLoginPage() {
   }, [])
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setLoading(true)
+  e.preventDefault()
+  setLoading(true)
 
-    try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      })
+  try {
+    const response = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    })
 
-      const data = await response.json()
+    const data = await response.json()
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Login gagal')
-      }
-
-      toast.success('Login berhasil!')
-      router.push('/admin/dashboard')
-    } catch (error: any) {
-      toast.error(error.message)
-    } finally {
-      setLoading(false)
+    if (!response.ok) {
+      throw new Error(data.error || 'Login gagal')
     }
+
+    toast.success('Login berhasil!')
+    
+    // 🔥 TAMBAHKAN INI - Force reload dan redirect
+    window.location.href = '/admin/dashboard'
+    
+  } catch (error: any) {
+    toast.error(error.message)
+  } finally {
+    setLoading(false)
   }
+}
 
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">

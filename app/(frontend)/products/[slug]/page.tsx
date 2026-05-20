@@ -6,12 +6,13 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { ShoppingCart, Share2, Star, ArrowLeft, Heart, Eye, Shield, Truck, Clock, ChevronLeft, ChevronRight, CheckCircle, Sparkles, Link as LinkIcon, Zap, Crown, Gem, PartyPopper } from 'lucide-react'
+import { ShoppingCart, Share2, Star, ArrowLeft, Heart, Eye, Shield, Truck, Clock, ChevronLeft, ChevronRight, CheckCircle, Sparkles, Link as LinkIcon, Zap, Crown, Gem, PartyPopper, ChevronDown, ChevronUp } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { formatPrice } from '@/lib/utils/utils'
 import toast from 'react-hot-toast'
 import type { Product } from '@/types'
 import { ProductCard } from '@/components/product/ProductCard'
+import ReactMarkdown from 'react-markdown'
 
 export default function ProductDetailPage() {
     const params = useParams()
@@ -22,6 +23,17 @@ export default function ProductDetailPage() {
     const [selectedImage, setSelectedImage] = useState(0)
     const [isWishlisted, setIsWishlisted] = useState(false)
     const supabase = createClient()
+
+    // State untuk toggle deskripsi
+    const [isExpanded, setIsExpanded] = useState(false)
+    const DESCRIPTION_LIMIT = 300
+
+    // Fungsi untuk memotong teks
+    const truncateText = (text: string, limit: number) => {
+        if (!text) return ''
+        if (text.length <= limit) return text
+        return text.slice(0, limit) + '...'
+    }
 
     const fetchProduct = async () => {
   setLoading(true)
@@ -307,19 +319,52 @@ useEffect(() => {
                             </div>
                         </div>
 
-                        {/* Description */}
-                        <div className="space-y-2">
-                            <h3 className="text-sm md:text-base font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                                <Sparkles className="h-4 w-4 text-purple-500" />
-                                Deskripsi Produk
-                            </h3>
-                            <div className="bg-white/50 dark:bg-slate-900/50 rounded-xl p-3 md:p-4 border border-slate-200 dark:border-slate-800">
-                                <p className="text-xs md:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                                    {product.description || 'Tidak ada deskripsi untuk produk ini.'}
-                                </p>
-                            </div>
-                        </div>
-
+                        {/* Description - Versi dengan animasi smooth */}
+<div className="space-y-2">
+    <h3 className="text-sm md:text-base font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+        <Sparkles className="h-4 w-4 text-purple-500" />
+        Deskripsi Produk
+    </h3>
+    <div className="bg-white/50 dark:bg-slate-900/50 rounded-xl p-3 md:p-4 border border-slate-200 dark:border-slate-800">
+        {product.description ? (
+            <>
+                <div 
+                    className={`text-xs md:text-sm text-slate-600 dark:text-slate-400 leading-relaxed prose prose-sm max-w-none 
+                                [&_p]:mb-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1
+                                transition-all duration-300 overflow-hidden
+                                ${isExpanded ? 'max-h-[2000px]' : 'max-h-32'}`}
+                >
+                    <ReactMarkdown>
+                        {product.description}
+                    </ReactMarkdown>
+                </div>
+                
+                {product.description.length > 200 && (
+                    <button
+                        onClick={() => setIsExpanded(!isExpanded)}
+                        className="mt-3 flex items-center gap-1 text-sm font-medium text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-colors"
+                    >
+                        {isExpanded ? (
+                            <>
+                                <ChevronUp className="h-4 w-4" />
+                                Sembunyikan
+                            </>
+                        ) : (
+                            <>
+                                <ChevronDown className="h-4 w-4" />
+                                Lihat Selengkapnya
+                            </>
+                        )}
+                    </button>
+                )}
+            </>
+        ) : (
+            <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400 italic">
+                Tidak ada deskripsi untuk produk ini.
+            </p>
+        )}
+    </div>
+</div>
                         {/* Stock Info */}
                         <div className="flex items-center gap-2 text-xs md:text-sm">
                             <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-green-500 rounded-full animate-pulse" />

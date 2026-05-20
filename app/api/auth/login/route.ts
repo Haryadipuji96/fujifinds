@@ -1,5 +1,4 @@
-// app/api/auth/login/route.ts
-import { createClient } from '@/lib/supabase/server' // Ganti nama import
+import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import { cookies } from 'next/headers'
@@ -8,8 +7,7 @@ export async function POST(request: Request) {
   try {
     const { email, password } = await request.json()
 
-    // Cari admin di database
-    const supabase = await createClient() // Gunakan createClient
+    const supabase = await createClient()
     const { data: admin, error } = await supabase
       .from('admins')
       .select('*')
@@ -23,7 +21,6 @@ export async function POST(request: Request) {
       )
     }
 
-    // Verifikasi password
     const isValidPassword = await bcrypt.compare(password, admin.password_hash)
     
     if (!isValidPassword) {
@@ -33,18 +30,26 @@ export async function POST(request: Request) {
       )
     }
 
-    // Update last_login
+    const now = new Date().toISOString()
+    
+    // Update last_login dan last_activity
     await supabase
       .from('admins')
-      .update({ last_login: new Date().toISOString() })
+      .update({ 
+        last_login: now,
+        last_activity: now 
+      })
       .eq('id', admin.id)
 
-    // Set session cookie
     const cookieStore = await cookies()
+    
+    // Set session dengan loginAt dan lastActivity
     cookieStore.set('admin_session', JSON.stringify({
       id: admin.id,
       email: admin.email,
-      name: admin.name
+      name: admin.name,
+      loginAt: Date.now(),
+      lastActivity: Date.now()
     }), {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

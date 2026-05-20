@@ -3,11 +3,12 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Plus, Edit, Trash2, Eye, Package, Filter, TrendingUp, Sparkles, Search, RefreshCw, ShoppingBag, Zap, Grid3x3, List } from 'lucide-react'
+import { Plus, Edit, Trash2, Eye, Package, Filter, TrendingUp, Sparkles, Search, RefreshCw, ShoppingBag, Zap, Grid3x3, List, Trash, CheckSquare, Square } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   Table,
   TableBody,
@@ -47,6 +48,11 @@ export default function AdminProductsPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [platformFilter, setPlatformFilter] = useState('all')
   const [statusFilter, setStatusFilter] = useState('all')
+  
+  // 🔥 TAMBAHKAN STATE UNTUK MULTI-SELECT
+  const [selectedProducts, setSelectedProducts] = useState<Set<string>>(new Set())
+  const [isDeleteMultipleOpen, setIsDeleteMultipleOpen] = useState(false)
+  
   const supabase = createClient()
 
   useEffect(() => {
@@ -88,6 +94,8 @@ export default function AdminProductsPage() {
     }
     
     setFilteredProducts(filtered)
+    // Reset selected products ketika filter berubah
+    setSelectedProducts(new Set())
   }
 
   const handleDelete = async () => {
@@ -105,6 +113,47 @@ export default function AdminProductsPage() {
       fetchProducts()
     }
     setDeleteId(null)
+  }
+
+  // 🔥 TAMBAHKAN FUNGSI UNTUK DELETE MULTIPLE
+  const handleDeleteMultiple = async () => {
+    if (selectedProducts.size === 0) return
+
+    const productIds = Array.from(selectedProducts)
+    const { error } = await supabase
+      .from('products')
+      .delete()
+      .in('id', productIds)
+
+    if (error) {
+      toast.error('Gagal menghapus produk')
+    } else {
+      toast.success(`${selectedProducts.size} produk berhasil dihapus`)
+      fetchProducts()
+      setSelectedProducts(new Set())
+    }
+    setIsDeleteMultipleOpen(false)
+  }
+
+  // 🔥 FUNGSI UNTUK TOGGLE SELECT SINGLE PRODUCT
+  const toggleSelectProduct = (productId: string) => {
+    const newSelected = new Set(selectedProducts)
+    if (newSelected.has(productId)) {
+      newSelected.delete(productId)
+    } else {
+      newSelected.add(productId)
+    }
+    setSelectedProducts(newSelected)
+  }
+
+  // 🔥 FUNGSI UNTUK SELECT ALL PRODUCTS
+  const toggleSelectAll = () => {
+    if (selectedProducts.size === filteredProducts.length) {
+      setSelectedProducts(new Set())
+    } else {
+      const allIds = filteredProducts.map(p => p.id)
+      setSelectedProducts(new Set(allIds))
+    }
   }
 
   const toggleActive = async (id: string, currentStatus: boolean) => {
@@ -130,6 +179,8 @@ export default function AdminProductsPage() {
     router.push('/admin/products/add')
   }
 
+  const isAllSelected = filteredProducts.length > 0 && selectedProducts.size === filteredProducts.length
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -147,13 +198,26 @@ export default function AdminProductsPage() {
             </div>
           </div>
         </div>
-        <Button 
-          onClick={handleAddProduct}
-          className="bg-gradient-to-r from-[#00D4FF] to-[#FF006E] hover:from-[#00D4FF]/90 hover:to-[#FF006E]/90 shadow-lg shadow-[#00D4FF]/25 rounded-xl"
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          Tambah Produk
-        </Button>
+        <div className="flex gap-2">
+          {/* 🔥 TOMBOL DELETE MULTIPLE (muncul jika ada produk yang dipilih) */}
+          {selectedProducts.size > 0 && (
+            <Button 
+              variant="destructive"
+              onClick={() => setIsDeleteMultipleOpen(true)}
+              className="bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/30 rounded-xl"
+            >
+              <Trash className="mr-2 h-4 w-4" />
+              Hapus ({selectedProducts.size})
+            </Button>
+          )}
+          <Button 
+            onClick={handleAddProduct}
+            className="bg-gradient-to-r from-[#00D4FF] to-[#FF006E] hover:from-[#00D4FF]/90 hover:to-[#FF006E]/90 shadow-lg shadow-[#00D4FF]/25 rounded-xl"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Tambah Produk
+          </Button>
+        </div>
       </div>
 
       {/* Stats Cards */}
@@ -245,18 +309,49 @@ export default function AdminProductsPage() {
       {/* Products Table */}
       <Card className="group bg-gradient-to-br from-slate-900 to-slate-800 border-slate-700 hover:border-[#00D4FF]/30 transition-all duration-500 overflow-hidden">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-white">
-            <div className="p-1.5 rounded-xl bg-[#00D4FF]/10">
-              <Grid3x3 className="h-4 w-4 text-[#00D4FF]" />
-            </div>
-            Daftar Produk
-          </CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2 text-white">
+              <div className="p-1.5 rounded-xl bg-[#00D4FF]/10">
+                <Grid3x3 className="h-4 w-4 text-[#00D4FF]" />
+              </div>
+              Daftar Produk
+            </CardTitle>
+            {/* 🔥 SELECT ALL BUTTON */}
+            {filteredProducts.length > 0 && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleSelectAll}
+                className="text-slate-400 hover:text-white gap-2"
+              >
+                {isAllSelected ? (
+                  <>
+                    <CheckSquare className="h-4 w-4" />
+                    Deselect All
+                  </>
+                ) : (
+                  <>
+                    <Square className="h-4 w-4" />
+                    Select All
+                  </>
+                )}
+              </Button>
+            )}
+          </div>
         </CardHeader>
         <CardContent>
           <div className="rounded-xl border border-slate-700 overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow className="bg-slate-800/50 border-slate-700">
+                  <TableHead className="w-[50px] text-slate-300">
+                    <Checkbox
+                      checked={isAllSelected}
+                      onCheckedChange={toggleSelectAll}
+                      className="border-slate-600"
+                    />
+                  </TableHead>
+                  <TableHead className="w-[60px] text-slate-300">No</TableHead>
                   <TableHead className="min-w-[200px] text-slate-300">Nama Produk</TableHead>
                   <TableHead className="w-[100px] text-slate-300">Platform</TableHead>
                   <TableHead className="w-[120px] text-slate-300">Harga</TableHead>
@@ -267,7 +362,7 @@ export default function AdminProductsPage() {
               <TableBody>
                 {loading ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-12">
+                    <TableCell colSpan={7} className="text-center py-12">
                       <div className="flex items-center justify-center gap-2 text-slate-400">
                         <div className="h-5 w-5 border-2 border-[#00D4FF] border-t-transparent rounded-full animate-spin" />
                         Loading...
@@ -276,7 +371,7 @@ export default function AdminProductsPage() {
                   </TableRow>
                 ) : filteredProducts.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-12 text-slate-500">
+                    <TableCell colSpan={7} className="text-center py-12 text-slate-500">
                       <Package className="h-12 w-12 mx-auto mb-3 opacity-50" />
                       Belum ada produk
                       <div className="mt-3">
@@ -288,8 +383,16 @@ export default function AdminProductsPage() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredProducts.map((product) => (
+                  filteredProducts.map((product, index) => (
                     <TableRow key={product.id} className="hover:bg-slate-800/50 transition-colors border-slate-700">
+                      <TableCell>
+                        <Checkbox
+                          checked={selectedProducts.has(product.id)}
+                          onCheckedChange={() => toggleSelectProduct(product.id)}
+                          className="border-slate-600"
+                        />
+                      </TableCell>
+                      <TableCell className="text-slate-400 whitespace-nowrap">{index + 1}</TableCell>
                       <TableCell className="font-medium text-white">
                         <div className="max-w-[250px] break-words">
                           {product.name}
@@ -346,6 +449,7 @@ export default function AdminProductsPage() {
         </CardContent>
       </Card>
 
+      {/* Alert Dialog Delete Single */}
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <AlertDialogContent className="bg-slate-900 border-slate-700">
           <AlertDialogHeader>
@@ -358,6 +462,24 @@ export default function AdminProductsPage() {
             <AlertDialogCancel className="bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700">Batal</AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete} className="bg-red-500 hover:bg-red-600">
               Hapus
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* 🔥 ALERT DIALOG DELETE MULTIPLE */}
+      <AlertDialog open={isDeleteMultipleOpen} onOpenChange={setIsDeleteMultipleOpen}>
+        <AlertDialogContent className="bg-slate-900 border-slate-700">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-white">Hapus {selectedProducts.size} Produk?</AlertDialogTitle>
+            <AlertDialogDescription className="text-slate-400">
+              {selectedProducts.size} produk yang dipilih akan dihapus permanen. Tindakan ini tidak dapat dibatalkan.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700">Batal</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteMultiple} className="bg-red-500 hover:bg-red-600">
+              Hapus Semua
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
