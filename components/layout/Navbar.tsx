@@ -28,7 +28,7 @@ export default function Navbar() {
     { name: 'Shopee', href: '/platform/shopee' },
     { name: 'TikTok', href: '/platform/tiktok' },
     { name: 'Trending', href: '/trending' },
-    { name: 'Semua Produk', href: '/products' },
+    { name: 'Semua Produk', href: '/product' },
     { name: 'Wishlist', href: '/wishlist' },
     { name: 'Tentang Kami', href: '/about' },
   ]
